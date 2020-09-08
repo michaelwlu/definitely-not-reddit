@@ -7,6 +7,8 @@ import {
   ObjectType,
   Query,
   Resolver,
+  FieldResolver,
+  Root,
 } from 'type-graphql';
 import { v4 as uuidv4 } from 'uuid';
 import { COOKIE_NAME, FORGET_PASSWORD_PREFIX } from '../constants';
@@ -33,8 +35,19 @@ class UserResponse {
   user?: User;
 }
 
-@Resolver()
+@Resolver(User)
 export class UserResolver {
+  @FieldResolver(() => String)
+  email(@Root() user: User, @Ctx() { req }: MyContext) {
+    // this is the current user
+    if (req.session.userId === user.id) {
+      return user.email;
+    }
+
+    // current user wants to see someone else's email
+    return '';
+  }
+
   // Change password
   @Mutation(() => UserResponse)
   async changePassword(
@@ -67,7 +80,7 @@ export class UserResolver {
       };
     }
 
-    const userIdNum = parseInt(userId);
+    const userIdNum = Number(userId);
     const user = await User.findOne(userIdNum);
 
     if (!user) {

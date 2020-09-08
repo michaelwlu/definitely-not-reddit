@@ -28,6 +28,7 @@ const hello_1 = require("./resolvers/hello");
 const post_1 = require("./resolvers/post");
 const user_1 = require("./resolvers/user");
 const path_1 = __importDefault(require("path"));
+const Upvote_1 = require("./entities/Upvote");
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     const conn = yield typeorm_1.createConnection({
         type: 'postgres',
@@ -37,9 +38,9 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
         logging: true,
         synchronize: true,
         migrations: [path_1.default.join(__dirname, './migrations/*')],
-        entities: [Post_1.Post, User_1.User],
+        entities: [Post_1.Post, User_1.User, Upvote_1.Upvote],
     });
-    conn.runMigrations();
+    yield conn.runMigrations();
     const app = express_1.default();
     const RedisStore = connect_redis_1.default(express_session_1.default);
     const redis = new ioredis_1.default();
