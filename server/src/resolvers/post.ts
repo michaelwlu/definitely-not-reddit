@@ -2,21 +2,22 @@ import {
   Arg,
   Ctx,
   Field,
+  FieldResolver,
   InputType,
   Int,
   Mutation,
+  ObjectType,
   Query,
   Resolver,
-  UseMiddleware,
-  FieldResolver,
   Root,
-  ObjectType,
+  UseMiddleware,
 } from 'type-graphql';
 import { getConnection } from 'typeorm';
 import { Post } from '../entities/Post';
+import { Upvote } from '../entities/Upvote';
+import { User } from '../entities/User';
 import { isAuth } from '../middleware/isAuth';
 import { MyContext } from '../types';
-import { Upvote } from '../entities/Upvote';
 
 // Type for Post
 @InputType()
@@ -38,8 +39,30 @@ class PaginatedPosts {
 @Resolver(Post)
 export class PostResolver {
   @FieldResolver(() => String)
-  textSnippet(@Root() root: Post) {
-    return root.text.slice(0, 50);
+  textSnippet(@Root() post: Post) {
+    return post.text.slice(0, 50);
+  }
+
+  @FieldResolver(() => User)
+  creator(@Root() post: Post, @Ctx() { userLoader }: MyContext) {
+    return userLoader.load(post.creatorId);
+  }
+
+  @FieldResolver(() => Int, { nullable: true })
+  async voteStatus(
+    @Root() post: Post,
+    @Ctx() { req, upvoteLoader }: MyContext
+  ) {
+    if (!req.session.userId) {
+      return null;
+    }
+
+    const upvote = await upvoteLoader.load({
+      postId: post.id,
+      userId: req.session.userId,
+    });
+
+    return upvote ? upvote.value : null;
   }
 
   @Mutation(() => Boolean)
@@ -121,60 +144,27 @@ export class PostResolver {
   @Query(() => PaginatedPosts)
   async posts(
     @Arg('limit', () => Int) limit: number,
-    @Arg('cursor', () => String, { nullable: true }) cursor: string | null,
-    @Ctx() { req }: MyContext
+    @Arg('cursor', () => String, { nullable: true }) cursor: string | null
   ): Promise<PaginatedPosts> {
     const validLimit = Math.min(50, limit);
     const validLimitPlus = validLimit + 1;
 
     const replacements: any[] = [validLimitPlus];
 
-    if (req.session.userId) {
-      replacements.push(req.session.userId);
-    }
-
-    let cursorIdx = 3;
-
     if (cursor) {
       replacements.push(new Date(Number(cursor)));
-      cursorIdx = replacements.length;
     }
 
     const posts = await getConnection().query(
       `
-			SELECT p.*,
-			json_build_object(
-				'id', u.id,
-				'username', u.username,
-				'email', u.email,
-				'createdAt', u."createdAt",
-				'updatedAt', u."updatedAt"
-				) creator,
-			${
-        req.session.userId
-          ? '(SELECT value FROM upvote WHERE "userId" = $2 AND "postId" = p.id) "voteStatus"'
-          : 'null as "voteStatus"'
-      }
-			FROM post AS p
-			INNER JOIN public.user AS u ON  u.id = p."creatorId"
-			${cursor ? `WHERE p."createdAt" < $${cursorIdx}` : ''}
+			SELECT p.*
+			FROM post p
+			${cursor ? `WHERE p."createdAt" < $2` : ''}
 			ORDER BY p."createdAt" DESC
 			LIMIT $1
 			`,
       replacements
     );
-
-    // const qb = getConnection()
-    //   .getRepository(Post)
-    //   .createQueryBuilder('p')
-    //   .innerJoinAndSelect('p.creator', 'u', 'u.id = p."creatorId"')
-    //   .orderBy('p."createdAt"', 'DESC')
-    //   .take(validLimitPlus);
-    // if (cursor) {
-    //   qb.where('p."createdAt" < :cursor', { cursor: new Date(Number(cursor)) });
-    // }
-
-    // const posts = await qb.getMany();
 
     return {
       posts: posts.slice(0, validLimit),
@@ -184,7 +174,7 @@ export class PostResolver {
 
   @Query(() => Post, { nullable: true })
   post(@Arg('id', () => Int) id: number): Promise<Post | undefined> {
-    return Post.findOne(id, { relations: ['creator'] });
+    return Post.findOne(id);
   }
 
   @Mutation(() => Post)

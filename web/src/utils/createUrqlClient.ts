@@ -1,19 +1,19 @@
-import { dedupExchange, fetchExchange, Exchange } from 'urql';
-import { cacheExchange } from '@urql/exchange-graphcache';
+import { cacheExchange, Cache } from '@urql/exchange-graphcache';
+import gql from 'graphql-tag';
+import Router from 'next/router';
+import { dedupExchange, Exchange, fetchExchange } from 'urql';
+import { pipe, tap } from 'wonka';
 import {
-  LogoutMutation,
-  MeQuery,
-  MeDocument,
+  DeletePostMutationVariables,
   LoginMutation,
+  LogoutMutation,
+  MeDocument,
+  MeQuery,
   RegisterMutation,
   VoteMutationVariables,
-  DeletePostMutationVariables,
 } from '../generated/graphql';
 import { betterUpdateQuery } from './betterUpdateQuery';
-import { pipe, tap } from 'wonka';
-import Router from 'next/router';
 import { cursorPagination } from './cursorPagination';
-import gql from 'graphql-tag';
 import { isServer } from './isServer';
 
 const errorExchange: Exchange = ({ forward }) => (ops$) => {
@@ -25,6 +25,14 @@ const errorExchange: Exchange = ({ forward }) => (ops$) => {
       }
     })
   );
+};
+
+const invalidatePosts = (cache: Cache) => {
+  const allFields = cache.inspectFields('Query');
+  const fieldInfos = allFields.filter((info) => info.fieldName === 'posts');
+  fieldInfos.forEach((fi) => {
+    cache.invalidate('Query', 'posts', fi.arguments || {});
+  });
 };
 
 export const createUrqlClient = (ssrExchange: any, ctx: any) => {
@@ -107,13 +115,7 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
               }
             },
             createPost: (_result, args, cache, info) => {
-              const allFields = cache.inspectFields('Query');
-              const fieldInfos = allFields.filter(
-                (info) => info.fieldName === 'posts'
-              );
-              fieldInfos.forEach((fi) => {
-                cache.invalidate('Query', 'posts', fi.arguments || {});
-              });
+              invalidatePosts(cache);
             },
             logout: (_result, args, cache, info) => {
               // me query return null
@@ -141,6 +143,7 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
                   }
                 }
               );
+              invalidatePosts(cache);
             },
 
             register: (_result, args, cache, info) => {

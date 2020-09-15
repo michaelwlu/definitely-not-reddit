@@ -15,6 +15,8 @@ import { PostResolver } from './resolvers/post';
 import { UserResolver } from './resolvers/user';
 import path from 'path';
 import { Upvote } from './entities/Upvote';
+import { createUserLoader } from './utils/createUserLoader';
+import { createUpvoteLoader } from './utils/createUpvoteLoader';
 
 //comment
 const main = async () => {
@@ -67,7 +69,13 @@ const main = async () => {
       resolvers: [HelloResolver, PostResolver, UserResolver],
       validate: false,
     }),
-    context: ({ req, res }) => ({ req, res, redis }),
+    context: ({ req, res }) => ({
+      req,
+      res,
+      redis,
+      userLoader: createUserLoader(),
+      upvoteLoader: createUpvoteLoader(),
+    }),
   });
 
   apolloServer.applyMiddleware({ app, cors: false });
