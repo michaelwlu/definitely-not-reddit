@@ -1,7 +1,8 @@
-import { Box, Flex, Heading, IconButton, Link, Text } from '@chakra-ui/core';
+import { Box, Flex, Heading, Link, Text } from '@chakra-ui/core';
 import NextLink from 'next/link';
 import React from 'react';
 import { PostSnippetFragment } from '../generated/graphql';
+import EditDeletePostButtons from './EditDeletePostButtons';
 import UpvoteSection from './UpvoteSection';
 
 interface PostSnippetProps {
@@ -10,7 +11,7 @@ interface PostSnippetProps {
 
 const PostSnippet: React.FC<PostSnippetProps> = ({ post }) => {
   return (
-    <Flex p={5} shadow="md" borderWidth="1px">
+    <Flex key={post.id} p={5} shadow="md" borderWidth="1px">
       <UpvoteSection post={post} />
       <Box flex={1}>
         <NextLink href="/post/[id]" as={`/post/${post.id}`}>
@@ -18,16 +19,17 @@ const PostSnippet: React.FC<PostSnippetProps> = ({ post }) => {
             <Heading fontSize="xl">{post.title}</Heading>
           </Link>
         </NextLink>
-        <Text>posted by {post.creator.username}</Text>
+        <Text fontSize="sm" textColor="gray.500">
+          submitted by{' '}
+          <Text as="span" textColor="gray.700">
+            {post.creator.username}
+          </Text>
+        </Text>
         <Flex align="center">
           <Text flex={1} mt={4}>
             {post.textSnippet}
           </Text>
-          <IconButton
-            icon="delete"
-            aria-label="delete post"
-            onClick={() => {}}
-          />
+          <EditDeletePostButtons id={post.id} creatorId={post.creator.id} />
         </Flex>
       </Box>
     </Flex>

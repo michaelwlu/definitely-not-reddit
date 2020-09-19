@@ -1,5 +1,5 @@
 {
-  "name": "reddit-clone-web",
+  "name": "definitely-not-reddit-web",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,28 +9,25 @@
     "gen": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
-    "@chakra-ui/core": "^0.5.2",
-    "@emotion/core": "^10.0.27",
-    "@emotion/styled": "^10.0.27",
-    "@urql/exchange-graphcache": "^3.0.2",
-    "emotion-theming": "^10.0.27",
+    "@apollo/client": "^3.2.0",
+    "@chakra-ui/core": "^1.0.0-rc.3",
+    "@chakra-ui/icons": "^1.0.0-rc.3",
     "formik": "^2.1.5",
     "graphql": "^15.3.0",
     "graphql-tag": "^2.11.0",
     "isomorphic-unfetch": "^3.0.0",
     "next": "^9.1.7",
-    "next-urql": "^1.1.0",
+    "next-apollo": "^5.0.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
-    "react-is": "^16.13.1",
-    "urql": "^1.10.0"
+    "react-is": "^16.13.1"
   },
   "license": "MIT",
   "devDependencies": {
     "@graphql-codegen/cli": "1.17.8",
     "@graphql-codegen/typescript": "1.17.8",
     "@graphql-codegen/typescript-operations": "1.17.8",
-    "@graphql-codegen/typescript-urql": "^2.0.1",
+    "@graphql-codegen/typescript-react-apollo": "^2.0.6",
     "@types/node": "^14.6.2",
     "typescript": "^4.0.2"
   }

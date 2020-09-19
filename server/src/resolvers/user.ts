@@ -3,20 +3,20 @@ import {
   Arg,
   Ctx,
   Field,
+  FieldResolver,
   Mutation,
   ObjectType,
   Query,
   Resolver,
-  FieldResolver,
   Root,
 } from 'type-graphql';
 import { v4 as uuidv4 } from 'uuid';
 import { COOKIE_NAME, FORGET_PASSWORD_PREFIX } from '../constants';
 import { User } from '../entities/User';
+import { UsernamePasswordInput } from '../entities/UsernamePasswordInput';
 import { MyContext } from '../types';
 import { sendEmail } from '../utils/sendEmail';
 import { validateRegister } from '../utils/validateRegister';
-import { UsernamePasswordInput } from './UsernamePasswordInput';
 
 @ObjectType()
 class FieldError {
@@ -136,7 +136,7 @@ export class UserResolver {
 
     await sendEmail(
       user.email,
-      `<a href="http://localhost:3000/change-password/${token}">Reset password</a>`
+      `<a href="${process.env.CORS_ORIGIN}/change-password/${token}">Reset password</a>`
     );
 
     return true;
@@ -171,19 +171,6 @@ export class UserResolver {
         email: options.email,
         password: hashedPassword,
       }).save();
-      // Query Builder Method
-      // const result = await getConnection()
-      //   .createQueryBuilder()
-      //   .insert()
-      //   .into(User)
-      //   .values({
-      //     username: options.username,
-      //     email: options.email,
-      //     password: hashedPassword,
-      //   })
-      //   .returning('*')
-      //   .execute();
-      // user = result.raw[0];
     } catch (err) {
       if (err.detail.includes('already exists')) {
         return {
@@ -219,7 +206,7 @@ export class UserResolver {
     if (!user) {
       return {
         errors: [
-          { field: 'usernameOrEmail', message: "That username doesn't exist" },
+          { field: 'usernameOrEmail', message: 'Username does not exist' },
         ],
       };
     }

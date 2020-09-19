@@ -1,64 +1,43 @@
-import { Box, Button, Flex, Heading, Link, Stack, Text } from '@chakra-ui/core';
-import { withUrqlClient } from 'next-urql';
-import NextLink from 'next/link';
-import { useState } from 'react';
-import EditDeletePostButtons from '../components/EditDeletePostButtons';
+import { Button, Flex, Stack } from '@chakra-ui/core';
 import Layout from '../components/Layout';
-import UpvoteSection from '../components/UpvoteSection';
+import PostSnippet from '../components/PostSnippet';
 import { usePostsQuery } from '../generated/graphql';
-import { createUrqlClient } from '../utils/createUrqlClient';
+import { withApollo } from '../utils/withApollo';
 
 const Index = () => {
-  const [variables, setVariables] = useState({
-    limit: 15,
-    cursor: null as null | string,
+  const { data, error, loading, fetchMore, variables } = usePostsQuery({
+    variables: { limit: 15, cursor: null },
+    notifyOnNetworkStatusChange: true,
   });
-  const [{ data, error, fetching }] = usePostsQuery({ variables });
 
-  if (!fetching && !data) {
+  if (!loading && !data) {
     return <div>{error?.message}</div>;
   }
 
   return (
     <Layout>
-      {!data && fetching ? (
+      {!data && loading ? (
         <div>Loading...</div>
       ) : (
         <Stack spacing={8}>
           {data!.posts.posts.map((p) =>
-            !p ? null : (
-              // <PostSnippet key={p.id} post={p} />
-              <Flex key={p.id} p={5} shadow="md" borderWidth="1px">
-                <UpvoteSection post={p} />
-                <Box flex={1}>
-                  <NextLink href="/post/[id]" as={`/post/${p.id}`}>
-                    <Link>
-                      <Heading fontSize="xl">{p.title}</Heading>
-                    </Link>
-                  </NextLink>
-                  <Text>posted by {p.creator.username}</Text>
-                  <Flex align="center">
-                    <Text flex={1} mt={4}>
-                      {p.textSnippet}
-                    </Text>
-                    <EditDeletePostButtons id={p.id} creatorId={p.creator.id} />
-                  </Flex>
-                </Box>
-              </Flex>
-            )
+            !p ? null : <PostSnippet key={p.id} post={p} />
           )}
         </Stack>
       )}
       {data && data.posts.hasMore ? (
         <Flex>
           <Button
-            onClick={() =>
-              setVariables({
-                limit: variables.limit,
-                cursor: data.posts.posts[data.posts.posts.length - 1].createdAt,
-              })
-            }
-            isLoading={fetching}
+            onClick={() => {
+              fetchMore({
+                variables: {
+                  limit: variables?.limit,
+                  cursor:
+                    data.posts.posts[data.posts.posts.length - 1].createdAt,
+                },
+              });
+            }}
+            isLoading={loading}
             m="auto"
             my={8}
           >
@@ -69,4 +48,4 @@ const Index = () => {
     </Layout>
   );
 };
-export default withUrqlClient(createUrqlClient, { ssr: true })(Index);
+export default withApollo({ ssr: true })(Index);

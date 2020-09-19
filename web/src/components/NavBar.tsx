@@ -1,22 +1,24 @@
-import React from 'react';
-import { Box, Link, Flex, Button, Heading } from '@chakra-ui/core';
+import { useApolloClient } from '@apollo/client';
+import { Box, Button, Flex, Heading, Link } from '@chakra-ui/core';
 import NextLink from 'next/link';
-import { useMeQuery, useLogoutMutation } from '../generated/graphql';
-import { isServer } from '../utils/isServer';
 import { useRouter } from 'next/router';
+import React from 'react';
+import { useLogoutMutation, useMeQuery } from '../generated/graphql';
+import { isServer } from '../utils/isServer';
 
 interface NavBarProps {}
 
 const NavBar: React.FC<NavBarProps> = ({}) => {
+  const apolloClient = useApolloClient();
   const router = useRouter();
-  const [{ fetching: logoutFetching }, logout] = useLogoutMutation();
-  const [{ data, fetching }] = useMeQuery({
-    pause: isServer(),
+  const [logout, { loading: logoutLoading }] = useLogoutMutation();
+  const { data, loading } = useMeQuery({
+    skip: isServer(),
   });
   let body = null;
 
   // data is loading
-  if (fetching) {
+  if (loading) {
     // user not logged in
   } else if (!data?.me) {
     body = (
@@ -36,7 +38,7 @@ const NavBar: React.FC<NavBarProps> = ({}) => {
     body = (
       <Flex align="center">
         <NextLink href="/create-post">
-          <Button as={Link} mr={2}>
+          <Button as={Link} mr={4} size="sm">
             Create Post
           </Button>
         </NextLink>
@@ -46,11 +48,13 @@ const NavBar: React.FC<NavBarProps> = ({}) => {
         <Button
           onClick={async () => {
             await logout();
-            router.reload();
+            await apolloClient.resetStore();
+            router.push('/');
           }}
-          isLoading={logoutFetching}
+          isLoading={logoutLoading}
           variant="link"
           color="white"
+          fontWeight="medium"
         >
           logout
         </Button>
@@ -59,11 +63,11 @@ const NavBar: React.FC<NavBarProps> = ({}) => {
   }
 
   return (
-    <Flex zIndex={1} position="sticky" top={0} bg="tomato" p={4}>
-      <Flex flex={1} mx="auto" align="center" maxW={800}>
+    <Flex zIndex={1} position="sticky" top={0} bg="themeTomato" p={4}>
+      <Flex flex={1} mx="auto" align="center" maxW={1024}>
         <NextLink href="/">
           <Link color="white">
-            <Heading>Reddit</Heading>
+            <Heading size="lg">Definitely Not Reddit</Heading>
           </Link>
         </NextLink>
         <Box ml={'auto'}>{body}</Box>

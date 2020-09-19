@@ -30,9 +30,9 @@ const type_graphql_1 = require("type-graphql");
 const uuid_1 = require("uuid");
 const constants_1 = require("../constants");
 const User_1 = require("../entities/User");
+const UsernamePasswordInput_1 = require("../entities/UsernamePasswordInput");
 const sendEmail_1 = require("../utils/sendEmail");
 const validateRegister_1 = require("../utils/validateRegister");
-const UsernamePasswordInput_1 = require("./UsernamePasswordInput");
 let FieldError = class FieldError {
 };
 __decorate([
@@ -120,7 +120,7 @@ let UserResolver = class UserResolver {
             }
             const token = uuid_1.v4();
             yield redis.set(constants_1.FORGET_PASSWORD_PREFIX + token, user.id, 'ex', 1000 * 60 * 60 * 24);
-            yield sendEmail_1.sendEmail(user.email, `<a href="http://localhost:3000/change-password/${token}">Reset password</a>`);
+            yield sendEmail_1.sendEmail(user.email, `<a href="${process.env.CORS_ORIGIN}/change-password/${token}">Reset password</a>`);
             return true;
         });
     }
@@ -170,7 +170,7 @@ let UserResolver = class UserResolver {
             if (!user) {
                 return {
                     errors: [
-                        { field: 'usernameOrEmail', message: "That username doesn't exist" },
+                        { field: 'usernameOrEmail', message: 'Username does not exist' },
                     ],
                 };
             }

@@ -16,23 +16,29 @@ exports.sendEmail = void 0;
 const nodemailer_1 = __importDefault(require("nodemailer"));
 function sendEmail(to, html) {
     return __awaiter(this, void 0, void 0, function* () {
-        let transporter = nodemailer_1.default.createTransport({
-            host: 'smtp.ethereal.email',
-            port: 587,
-            secure: false,
-            auth: {
-                user: 'ojo6dohtwwecnt5h@ethereal.email',
-                pass: 'NgseFQS6Rj4fkqGtA3',
-            },
-        });
-        let info = yield transporter.sendMail({
-            from: '"Fred Foo 👻" <foo@example.com>',
-            to,
-            subject: 'Change password',
-            html: html,
-        });
-        console.log('Message sent: %s', info.messageId);
-        console.log('Preview URL: %s', nodemailer_1.default.getTestMessageUrl(info));
+        try {
+            let transporter = nodemailer_1.default.createTransport({
+                service: 'gmail',
+                auth: {
+                    type: 'OAuth2',
+                    user: process.env.GMAIL_USER,
+                    clientId: process.env.GMAIL_CLIENT_ID,
+                    clientSecret: process.env.GMAIL_CLIENT_SECRET,
+                    refreshToken: process.env.GMAIL_REFRESH_TOKEN,
+                },
+                tls: { rejectUnauthorized: false },
+            });
+            let info = yield transporter.sendMail({
+                from: '"Support" <support@michaelwenlu.com>',
+                to,
+                subject: 'Password Reset',
+                html: html,
+            });
+            console.log(`Message sent: ${info.messageId}`);
+        }
+        catch (error) {
+            console.error(`Send email error: ${error}`);
+        }
     });
 }
 exports.sendEmail = sendEmail;

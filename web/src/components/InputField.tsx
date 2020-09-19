@@ -20,17 +20,21 @@ const InputField: React.FC<InputFieldProps> = ({
   size: _,
   ...props
 }) => {
-  let InputOrTextarea = Input;
-  if (textarea) {
-    InputOrTextarea = Textarea;
-  }
+  // let InputOrTextarea = Input;
+  // if (textarea) {
+  //   InputOrTextarea = Textarea;
+  // }
 
   const [field, { error }] = useField(props);
 
   return (
     <FormControl isInvalid={!!error}>
-      <FormLabel htmlFor="name">{label}</FormLabel>
-      <InputOrTextarea {...field} {...props} id={field.name} />
+      <FormLabel htmlFor={field.name}>{label}</FormLabel>
+      {textarea ? (
+        <Textarea {...field} {...props} id={field.name} />
+      ) : (
+        <Input {...field} {...props} id={field.name} />
+      )}
       {error ? <FormErrorMessage>{error}</FormErrorMessage> : null}
     </FormControl>
   );

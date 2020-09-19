@@ -1,46 +1,130 @@
-import { Flex, IconButton } from '@chakra-ui/core';
+import { ApolloCache } from '@apollo/client';
+import { Box, Flex, IconButton } from '@chakra-ui/core';
+import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
+import gql from 'graphql-tag';
 import React, { useState } from 'react';
-import { PostSnippetFragment, useVoteMutation } from '../generated/graphql';
+import {
+  PostSnippetFragment,
+  useVoteMutation,
+  VoteMutation,
+} from '../generated/graphql';
 
 interface UpvoteSectionProps {
   post: PostSnippetFragment;
 }
 
+const updateAfterVote = (
+  input: number,
+  postId: number,
+  cache: ApolloCache<VoteMutation>
+) => {
+  const data = cache.readFragment<{
+    id: number;
+    points: number;
+    voteStatus: number | null;
+  }>({
+    id: 'Post:' + postId,
+    fragment: gql`
+      fragment _ on Post {
+        id
+        points
+        voteStatus
+      }
+    `,
+  });
+
+  if (data) {
+    let pointsChange;
+    let voteCondition;
+
+    if (data.voteStatus === input) {
+      pointsChange = -1;
+      voteCondition = null;
+    } else if (data.voteStatus === -1 * input) {
+      pointsChange = 2;
+      voteCondition = input;
+    } else {
+      pointsChange = 1;
+      voteCondition = input;
+    }
+
+    const newPoints = (data.points as number) + pointsChange * input;
+
+    cache.writeFragment({
+      id: 'Post:' + postId,
+      fragment: gql`
+        fragment __ on Post {
+          points
+          voteStatus
+        }
+      `,
+      data: {
+        points: newPoints,
+        voteStatus: voteCondition,
+      },
+    });
+  }
+};
+
 const UpvoteSection: React.FC<UpvoteSectionProps> = ({ post }) => {
   const [loadingState, setLoadingState] = useState<
     'upvote-loading' | 'downvote-loading' | 'not-loading'
   >('not-loading');
-  const [{}, vote] = useVoteMutation();
+  const [vote] = useVoteMutation();
+
+  let voteColor;
+  switch (post.voteStatus) {
+    case 1:
+      voteColor = 'upvote.500';
+      break;
+    case -1:
+      voteColor = 'downvote.500';
+      break;
+    default:
+      voteColor = 'gray.400';
+      break;
+  }
+
   return (
-    <Flex direction="column" justify="center" align="center" mr={4}>
+    <Flex direction="column" justify="space-between" align="center" mr={4}>
       <IconButton
         onClick={async () => {
           setLoadingState('upvote-loading');
           await vote({
-            postId: post.id,
-            input: 1,
+            variables: {
+              postId: post.id,
+              input: 1,
+            },
+            update: (cache) => updateAfterVote(1, post.id, cache),
           });
           setLoadingState('not-loading');
         }}
-        variantColor={post.voteStatus === 1 ? 'green' : undefined}
+        colorScheme={post.voteStatus === 1 ? 'upvote' : undefined}
+        size="sm"
         isLoading={loadingState === 'upvote-loading'}
         aria-label="upvote post"
-        icon="chevron-up"
+        icon={<ChevronUpIcon />}
       />
-      {post.points}
+      <Box fontWeight="bold" textColor={voteColor}>
+        {post.points}
+      </Box>
       <IconButton
         onClick={async () => {
           setLoadingState('downvote-loading');
           await vote({
-            postId: post.id,
-            input: -1,
+            variables: {
+              postId: post.id,
+              input: -1,
+            },
+            update: (cache) => updateAfterVote(-1, post.id, cache),
           });
           setLoadingState('not-loading');
         }}
-        variantColor={post.voteStatus === -1 ? 'red' : undefined}
+        colorScheme={post.voteStatus === -1 ? 'downvote' : undefined}
+        size="sm"
         isLoading={loadingState === 'downvote-loading'}
         aria-label="downvote post"
-        icon="chevron-down"
+        icon={<ChevronDownIcon />}
       />
     </Flex>
   );

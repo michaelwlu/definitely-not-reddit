@@ -1,19 +1,22 @@
-import { Button, Box, Link, Flex } from '@chakra-ui/core';
+import { Box, Button, Flex, Link } from '@chakra-ui/core';
 import { Form, Formik } from 'formik';
 import { NextPage } from 'next';
+import NextLink from 'next/link';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
 import InputField from '../../components/InputField';
 import Wrapper from '../../components/Wrapper';
-import { useChangePasswordMutation } from '../../generated/graphql';
+import {
+  MeDocument,
+  MeQuery,
+  useChangePasswordMutation,
+} from '../../generated/graphql';
 import { toErrorMap } from '../../utils/toErrorMap';
-import { useState } from 'react';
-import { withUrqlClient } from 'next-urql';
-import { createUrqlClient } from '../../utils/createUrqlClient';
-import NextLink from 'next/link';
+import { withApollo } from '../../utils/withApollo';
 
 const ChangePassword: NextPage = () => {
   const router = useRouter();
-  const [{}, changePassword] = useChangePasswordMutation();
+  const [changePassword] = useChangePasswordMutation();
   const [tokenError, setTokenError] = useState('');
   return (
     <Wrapper variant="small">
@@ -21,9 +24,23 @@ const ChangePassword: NextPage = () => {
         initialValues={{ newPassword: '' }}
         onSubmit={async (values, { setErrors }) => {
           const response = await changePassword({
-            newPassword: values.newPassword,
-            token:
-              typeof router.query.token === 'string' ? router.query.token : '',
+            variables: {
+              newPassword: values.newPassword,
+              token:
+                typeof router.query.token === 'string'
+                  ? router.query.token
+                  : '',
+            },
+            update: (cache, { data }) => {
+              cache.writeQuery<MeQuery>({
+                query: MeDocument,
+                data: {
+                  __typename: 'Query',
+                  me: data?.changePassword.user,
+                },
+              });
+              cache.evict({ fieldName: 'posts:{}' });
+            },
           });
 
           if (response.data?.changePassword.errors) {
@@ -60,7 +77,7 @@ const ChangePassword: NextPage = () => {
               mt={4}
               type="submit"
               isLoading={isSubmitting}
-              variantColor="teal"
+              colorScheme="teal"
             >
               Submit
             </Button>
@@ -71,4 +88,4 @@ const ChangePassword: NextPage = () => {
   );
 };
 
-export default withUrqlClient(createUrqlClient)(ChangePassword);
+export default withApollo({ ssr: false })(ChangePassword);
