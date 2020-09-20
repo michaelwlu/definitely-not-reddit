@@ -24,12 +24,12 @@ const NavBar: React.FC<NavBarProps> = ({}) => {
     body = (
       <>
         <NextLink href="/login">
-          <Link color="white" mr={2}>
-            login
+          <Link color="white" mr={4}>
+            log in
           </Link>
         </NextLink>
-        <NextLink href="/register">
-          <Link color="white">register</Link>
+        <NextLink href="/signup">
+          <Link color="white">sign up</Link>
         </NextLink>
       </>
     );
@@ -42,7 +42,7 @@ const NavBar: React.FC<NavBarProps> = ({}) => {
             Create Post
           </Button>
         </NextLink>
-        <Box mr={2} color="white">
+        <Box mr={4} color="white">
           {data.me.username}
         </Box>
         <Button
@@ -56,7 +56,7 @@ const NavBar: React.FC<NavBarProps> = ({}) => {
           color="white"
           fontWeight="medium"
         >
-          logout
+          log out
         </Button>
       </Flex>
     );

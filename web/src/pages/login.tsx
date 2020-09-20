@@ -1,9 +1,9 @@
-import { Box, Button, Flex, Link } from '@chakra-ui/core';
+import { Box, Button, Flex, Link, Text } from '@chakra-ui/core';
 import { Form, Formik } from 'formik';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
-import InputField from '../components/InputField';
+import { InputField } from '../components/InputTextFields';
 import Layout from '../components/Layout';
 import { MeDocument, MeQuery, useLoginMutation } from '../generated/graphql';
 import { toErrorMap } from '../utils/toErrorMap';
@@ -64,17 +64,25 @@ const Login: React.FC<{}> = ({}) => {
               </NextLink>
             </Flex>
             <Button
-              mt={4}
+              mt={2}
               ml="auto"
               type="submit"
               isLoading={isSubmitting}
-              colorScheme="upvote"
+              colorScheme="teal"
+              size="sm"
             >
-              Login
+              Log in
             </Button>
           </Form>
         )}
       </Formik>
+      <Box mt={2}>
+        <NextLink href="/signup">
+          <Link fontSize="sm" textColor="gray.400">
+            Need an account? Sign up now
+          </Link>
+        </NextLink>
+      </Box>
     </Layout>
   );
 };

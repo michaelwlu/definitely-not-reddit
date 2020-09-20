@@ -1,8 +1,9 @@
-import { Box, Heading } from '@chakra-ui/core';
+import { Box, Flex, Heading, Text } from '@chakra-ui/core';
 import { useRouter } from 'next/router';
 import React from 'react';
 import EditDeletePostButtons from '../../components/EditDeletePostButtons';
 import Layout from '../../components/Layout';
+import UpvoteSection from '../../components/UpvoteSection';
 import { usePostQuery } from '../../generated/graphql';
 import { useGetIntId } from '../../utils/useGetIntId';
 import { withApollo } from '../../utils/withApollo';
@@ -41,12 +42,26 @@ const Post: React.FC<PostProps> = ({}) => {
 
   return (
     <Layout>
-      <Heading mb={4}>{data.post.title}</Heading>
-      <Box mb={4}>{data.post?.text}</Box>
-      <EditDeletePostButtons
-        id={data.post.id}
-        creatorId={data.post.creator.id}
-      />
+      <Flex align="top">
+        <Box mt={2} mr={4}>
+          <UpvoteSection post={data.post} />
+        </Box>
+        <Box w="100%">
+          <Heading fontSize="3xl" mb={2}>
+            {data.post.title}
+          </Heading>
+          <Flex mb={6} justify="start" align="center">
+            <Text textColor="gray.500" mr={4}>
+              submitted by {data.post.creator.username}
+            </Text>
+            <EditDeletePostButtons
+              id={data.post.id}
+              creatorId={data.post.creator.id}
+            />
+          </Flex>
+          <Box>{data.post?.text}</Box>
+        </Box>
+      </Flex>
     </Layout>
   );
 };

@@ -2,7 +2,7 @@ import { Box, Button } from '@chakra-ui/core';
 import { Form, Formik } from 'formik';
 import { useRouter } from 'next/router';
 import React from 'react';
-import InputField from '../../../components/InputField';
+import { InputField, TextareaField } from '../../../components/InputTextFields';
 import Layout from '../../../components/Layout';
 import {
   usePostQuery,
@@ -52,8 +52,7 @@ const EditPost: React.FC<EditPostProps> = ({}) => {
           <Form>
             <InputField name="title" placeholder="title" label="Title" />
             <Box mt={4}>
-              <InputField
-                textarea
+              <TextareaField
                 name="text"
                 placeholder="text..."
                 label="Body"
@@ -65,7 +64,7 @@ const EditPost: React.FC<EditPostProps> = ({}) => {
               ml="auto"
               type="submit"
               isLoading={isSubmitting}
-              colorScheme="upvote"
+              colorScheme="teal"
               size="sm"
             >
               Update Post

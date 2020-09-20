@@ -142,16 +142,22 @@ export type UsernamePasswordInput = {
 
 export type PostSnippetFragment = (
   { __typename?: 'Post' }
-  & Pick<Post, 'id' | 'createdAt' | 'updatedAt' | 'title' | 'points' | 'textSnippet' | 'voteStatus'>
-  & { creator: (
-    { __typename?: 'User' }
-    & Pick<User, 'id' | 'username'>
-  ) }
+  & Pick<Post, 'textSnippet'>
+  & RegularPostFragment
 );
 
 export type RegularErrorFragment = (
   { __typename?: 'FieldError' }
   & Pick<FieldError, 'field' | 'message'>
+);
+
+export type RegularPostFragment = (
+  { __typename?: 'Post' }
+  & Pick<Post, 'id' | 'createdAt' | 'updatedAt' | 'title' | 'points' | 'voteStatus'>
+  & { creator: (
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'username'>
+  ) }
 );
 
 export type RegularUserFragment = (
@@ -298,11 +304,8 @@ export type PostQuery = (
   { __typename?: 'Query' }
   & { post?: Maybe<(
     { __typename?: 'Post' }
-    & Pick<Post, 'id' | 'createdAt' | 'updatedAt' | 'title' | 'points' | 'text' | 'voteStatus'>
-    & { creator: (
-      { __typename?: 'User' }
-      & Pick<User, 'id' | 'username'>
-    ) }
+    & Pick<Post, 'text'>
+    & RegularPostFragment
   )> }
 );
 
@@ -324,14 +327,13 @@ export type PostsQuery = (
   ) }
 );
 
-export const PostSnippetFragmentDoc = gql`
-    fragment PostSnippet on Post {
+export const RegularPostFragmentDoc = gql`
+    fragment RegularPost on Post {
   id
   createdAt
   updatedAt
   title
   points
-  textSnippet
   voteStatus
   creator {
     id
@@ -339,6 +341,12 @@ export const PostSnippetFragmentDoc = gql`
   }
 }
     `;
+export const PostSnippetFragmentDoc = gql`
+    fragment PostSnippet on Post {
+  ...RegularPost
+  textSnippet
+}
+    ${RegularPostFragmentDoc}`;
 export const RegularErrorFragmentDoc = gql`
     fragment RegularError on FieldError {
   field
@@ -690,20 +698,11 @@ export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
 export const PostDocument = gql`
     query Post($id: Int!) {
   post(id: $id) {
-    id
-    createdAt
-    updatedAt
-    title
-    points
+    ...RegularPost
     text
-    voteStatus
-    creator {
-      id
-      username
-    }
   }
 }
-    `;
+    ${RegularPostFragmentDoc}`;
 
 /**
  * __usePostQuery__

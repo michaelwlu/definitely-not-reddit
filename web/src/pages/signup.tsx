@@ -2,15 +2,15 @@ import { Box, Button } from '@chakra-ui/core';
 import { Form, Formik } from 'formik';
 import { useRouter } from 'next/router';
 import React from 'react';
-import InputField from '../components/InputField';
+import { InputField } from '../components/InputTextFields';
 import Layout from '../components/Layout';
 import { MeDocument, MeQuery, useRegisterMutation } from '../generated/graphql';
 import { toErrorMap } from '../utils/toErrorMap';
 import { withApollo } from '../utils/withApollo';
 
-interface registerProps {}
+interface signUpProps {}
 
-const Register: React.FC<registerProps> = ({}) => {
+const SignUp: React.FC<signUpProps> = ({}) => {
   const router = useRouter();
   const [register] = useRegisterMutation();
   return (
@@ -45,10 +45,10 @@ const Register: React.FC<registerProps> = ({}) => {
               placeholder="username"
               label="Username"
             />
-            <Box mt={4}>
+            <Box mt={2}>
               <InputField name="email" placeholder="email" label="Email" />
             </Box>
-            <Box mt={4}>
+            <Box mt={6}>
               <InputField
                 name="password"
                 placeholder="password"
@@ -57,12 +57,13 @@ const Register: React.FC<registerProps> = ({}) => {
               />
             </Box>
             <Button
-              mt={4}
+              mt={8}
               type="submit"
               isLoading={isSubmitting}
               colorScheme="teal"
+              size="sm"
             >
-              Register
+              Sign up
             </Button>
           </Form>
         )}
@@ -71,4 +72,4 @@ const Register: React.FC<registerProps> = ({}) => {
   );
 };
 
-export default withApollo({ ssr: false })(Register);
+export default withApollo({ ssr: false })(SignUp);

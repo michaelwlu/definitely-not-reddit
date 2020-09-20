@@ -29,14 +29,13 @@ const EditDeletePostButtons: React.FC<EditDeletePostButtonsProps> = ({
           mr={2}
           icon={<EditIcon />}
           aria-label="Edit Post"
-          size="sm"
-          colorScheme="gray"
+          size="xs"
         />
       </NextLink>
       <IconButton
         icon={<DeleteIcon />}
         aria-label="Delete Post"
-        size="sm"
+        size="xs"
         onClick={() => {
           deletePost({
             variables: { id },

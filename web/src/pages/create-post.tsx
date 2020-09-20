@@ -2,7 +2,7 @@ import { Box, Button } from '@chakra-ui/core';
 import { Form, Formik } from 'formik';
 import { useRouter } from 'next/router';
 import React from 'react';
-import InputField from '../components/InputField';
+import { InputField, TextareaField } from '../components/InputTextFields';
 import Layout from '../components/Layout';
 import { useCreatePostMutation } from '../generated/graphql';
 import { useIsAuth } from '../utils/useIsAuth';
@@ -32,19 +32,14 @@ const CreatePost: React.FC<{}> = ({}) => {
           <Form>
             <InputField name="title" placeholder="title" label="Title" />
             <Box mt={4}>
-              <InputField
-                textarea
-                name="text"
-                placeholder="text..."
-                label="Body"
-              />
+              <TextareaField name="text" placeholder="text..." label="Body" />
             </Box>
             <Button
               mt={4}
               ml="auto"
               type="submit"
               isLoading={isSubmitting}
-              colorScheme="upvote"
+              colorScheme="teal"
             >
               Create Post
             </Button>
