@@ -1,9 +1,10 @@
-import { Box, Button, Flex, Link, Text } from '@chakra-ui/core';
 import { Form, Formik } from 'formik';
-import NextLink from 'next/link';
+import Head from 'next/head';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { InputField } from '../components/InputTextFields';
+import Button from '../components/Button';
+import InputField from '../components/InputField';
 import Layout from '../components/Layout';
 import { MeDocument, MeQuery, useLoginMutation } from '../generated/graphql';
 import { toErrorMap } from '../utils/toErrorMap';
@@ -14,6 +15,10 @@ const Login: React.FC<{}> = ({}) => {
   const [login] = useLoginMutation();
   return (
     <Layout variant="small">
+      <Head>
+        <title>Log in | Definitely Not Reddit</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
       <Formik
         initialValues={{ usernameOrEmail: '', password: '' }}
         onSubmit={async (values, { setErrors }) => {
@@ -48,41 +53,36 @@ const Login: React.FC<{}> = ({}) => {
               placeholder="username or email"
               label="Username or Email"
             />
-            <Box mt={4}>
-              <InputField
-                name="password"
-                placeholder="password"
-                label="Password"
-                type="password"
-              />
-            </Box>
-            <Flex>
-              <NextLink href="/forgot-password">
-                <Link ml="auto" mt={1} fontSize="sm" textColor="gray.400">
+            <InputField
+              name="password"
+              placeholder="password"
+              label="Password"
+              type="password"
+              addClassName="mt-4"
+            />
+            <div className="flex">
+              <Link href="/forgot-password">
+                <a className="mt-2 ml-auto text-sm text-gray-400 transition duration-150 ease-in-out hover:text-gray-500">
                   forgot password?
-                </Link>
-              </NextLink>
-            </Flex>
+                </a>
+              </Link>
+            </div>
             <Button
-              mt={2}
-              ml="auto"
+              text="Log in"
               type="submit"
               isLoading={isSubmitting}
-              colorScheme="teal"
-              size="sm"
-            >
-              Log in
-            </Button>
+              variant="teal"
+            />
           </Form>
         )}
       </Formik>
-      <Box mt={2}>
-        <NextLink href="/signup">
-          <Link fontSize="sm" textColor="gray.400">
+      <div className="mt-3">
+        <Link href="/signup">
+          <a className="text-sm text-gray-400 transition duration-150 ease-in-out hover:text-gray-500">
             Need an account? Sign up now
-          </Link>
-        </NextLink>
-      </Box>
+          </a>
+        </Link>
+      </div>
     </Layout>
   );
 };

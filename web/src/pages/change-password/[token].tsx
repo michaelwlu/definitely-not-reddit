@@ -1,11 +1,12 @@
-import { Box, Button, Flex, Link } from '@chakra-ui/core';
 import { Form, Formik } from 'formik';
 import { NextPage } from 'next';
-import NextLink from 'next/link';
+import Head from 'next/head';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
-import { InputField } from '../../components/InputTextFields';
-import Wrapper from '../../components/Wrapper';
+import React, { useState } from 'react';
+import Button from '../../components/Button';
+import InputField from '../../components/InputField';
+import Layout from '../../components/Layout';
 import {
   MeDocument,
   MeQuery,
@@ -19,7 +20,11 @@ const ChangePassword: NextPage = () => {
   const [changePassword] = useChangePasswordMutation();
   const [tokenError, setTokenError] = useState('');
   return (
-    <Wrapper variant="small">
+    <Layout variant="small">
+      <Head>
+        <title>Change password | Definitely Not Reddit</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
       <Formik
         initialValues={{ newPassword: '' }}
         onSubmit={async (values, { setErrors }) => {
@@ -64,27 +69,26 @@ const ChangePassword: NextPage = () => {
               type="password"
             />
             {tokenError ? (
-              <Flex>
-                <Box mr={2} color="red.500">
-                  {tokenError}
-                </Box>
-                <NextLink href="/forgot-password">
-                  <Link>Click here to get new token</Link>
-                </NextLink>
-              </Flex>
+              <div className="flex mt-2 text-sm">
+                <div className="mr-2 text-red-500">{tokenError}</div>
+                <Link href="/forgot-password">
+                  <a className="text-gray-500 transition duration-150 ease-in-out hover:text-gray-800">
+                    - click here to request a new password reset
+                  </a>
+                </Link>
+              </div>
             ) : null}
             <Button
-              mt={4}
+              text="Submit"
               type="submit"
               isLoading={isSubmitting}
-              colorScheme="teal"
-            >
-              Submit
-            </Button>
+              variant="teal"
+              addClassName="mt-6"
+            />
           </Form>
         )}
       </Formik>
-    </Wrapper>
+    </Layout>
   );
 };
 

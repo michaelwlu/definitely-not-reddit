@@ -8,6 +8,7 @@ import {
   UpdateDateColumn,
   OneToMany,
 } from 'typeorm';
+import { Comment } from './Comment';
 import { Post } from './Post';
 import { Upvote } from './Upvote';
 
@@ -23,7 +24,7 @@ export class User extends BaseEntity {
   username!: string;
 
   @Field()
-  @Column({ unique: true })
+  @Column({ unique: false })
   email!: string;
 
   @Column()
@@ -34,6 +35,9 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Upvote, (upvote) => upvote.user)
   upvotes: Upvote[];
+
+  @OneToMany(() => Comment, (comment) => comment.user)
+  comments: Comment[];
 
   @Field(() => String)
   @CreateDateColumn()

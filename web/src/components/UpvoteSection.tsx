@@ -1,6 +1,4 @@
 import { ApolloCache } from '@apollo/client';
-import { Box, Flex, IconButton } from '@chakra-ui/core';
-import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
 import gql from 'graphql-tag';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
@@ -79,26 +77,19 @@ const UpvoteSection: React.FC<UpvoteSectionProps> = ({ post }) => {
   let voteColor;
   switch (post.voteStatus) {
     case 1:
-      voteColor = 'upvote.500';
+      voteColor = 'orange';
       break;
     case -1:
-      voteColor = 'downvote.500';
+      voteColor = 'indigo';
       break;
     default:
-      voteColor = 'gray.500';
+      voteColor = 'gray';
       break;
   }
 
   return (
-    <Flex
-      direction="column"
-      justify="space-around"
-      align="center"
-      mr={4}
-      h={20}
-      w={8}
-    >
-      <IconButton
+    <div className="flex flex-col items-center justify-around flex-shrink-0 w-8 h-20 mr-4 text-gray-400">
+      <button
         onClick={async () => {
           if (!meData?.me?.id) router.push('/login');
           else {
@@ -113,16 +104,33 @@ const UpvoteSection: React.FC<UpvoteSectionProps> = ({ post }) => {
             setLoadingState('not-loading');
           }
         }}
-        colorScheme={post.voteStatus === 1 ? 'upvote' : undefined}
-        size="xs"
-        isLoading={loadingState === 'upvote-loading'}
+        disabled={loadingState === 'upvote-loading'}
         aria-label="upvote post"
-        icon={<ChevronUpIcon />}
-      />
-      <Box fontWeight="bold" textColor={voteColor} fontSize="lg">
+        className={`rounded-lg transition duration-150 ease-in-out p-1 border border-transparent focus:outline-none focus:shadow-outline-gray ${
+          post.voteStatus === 1
+            ? `text-white bg-${voteColor}-400 hover:bg-${voteColor}-500 focus:border-${voteColor}-100 active:bg-${voteColor}-500`
+            : 'text-black bg-gray-100 hover:bg-gray-200 focus:border-gray-300 active:bg-gray-300'
+        }`}
+      >
+        <svg
+          className="w-3 h-3"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fillRule="evenodd"
+            d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z"
+            clipRule="evenodd"
+          />
+        </svg>
+      </button>
+      <div
+        className={`font-bold mx-auto text-lg text-center text-${voteColor}-400`}
+      >
         {post.points}
-      </Box>
-      <IconButton
+      </div>
+      <button
         onClick={async () => {
           if (!meData?.me?.id) router.push('/login');
           else {
@@ -137,13 +145,28 @@ const UpvoteSection: React.FC<UpvoteSectionProps> = ({ post }) => {
             setLoadingState('not-loading');
           }
         }}
-        colorScheme={post.voteStatus === -1 ? 'downvote' : undefined}
-        size="xs"
-        isLoading={loadingState === 'downvote-loading'}
+        disabled={loadingState === 'downvote-loading'}
         aria-label="downvote post"
-        icon={<ChevronDownIcon />}
-      />
-    </Flex>
+        className={`rounded-lg transition duration-150 ease-in-out p-1 border border-transparent focus:outline-none focus:shadow-outline-gray ${
+          post.voteStatus === -1
+            ? `text-white bg-${voteColor}-400 hover:bg-${voteColor}-500 focus:border-${voteColor}-100 active:bg-${voteColor}-500`
+            : 'text-black bg-gray-100 hover:bg-gray-200 focus:border-gray-300 active:bg-gray-300'
+        }`}
+      >
+        <svg
+          className="w-3 h-3"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fillRule="evenodd"
+            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+            clipRule="evenodd"
+          />
+        </svg>
+      </button>
+    </div>
   );
 };
 

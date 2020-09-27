@@ -1,8 +1,9 @@
-import { Box, Button } from '@chakra-ui/core';
 import { Form, Formik } from 'formik';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { InputField } from '../components/InputTextFields';
+import Button from '../components/Button';
+import InputField from '../components/InputField';
 import Layout from '../components/Layout';
 import { MeDocument, MeQuery, useRegisterMutation } from '../generated/graphql';
 import { toErrorMap } from '../utils/toErrorMap';
@@ -15,6 +16,10 @@ const SignUp: React.FC<signUpProps> = ({}) => {
   const [register] = useRegisterMutation();
   return (
     <Layout variant="small">
+      <Head>
+        <title>Sign up | Definitely Not Reddit</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
       <Formik
         initialValues={{ username: '', email: '', password: '' }}
         onSubmit={async (values, { setErrors }) => {
@@ -45,26 +50,26 @@ const SignUp: React.FC<signUpProps> = ({}) => {
               placeholder="username"
               label="Username"
             />
-            <Box mt={2}>
-              <InputField name="email" placeholder="email" label="Email" />
-            </Box>
-            <Box mt={6}>
-              <InputField
-                name="password"
-                placeholder="password"
-                label="Password"
-                type="password"
-              />
-            </Box>
+            <InputField
+              name="email"
+              placeholder="email"
+              label="Email"
+              addClassName="mt-4"
+            />
+            <InputField
+              name="password"
+              placeholder="password"
+              label="Password"
+              type="password"
+              addClassName="mt-6"
+            />
             <Button
-              mt={8}
+              text="Sign up"
               type="submit"
               isLoading={isSubmitting}
-              colorScheme="teal"
-              size="sm"
-            >
-              Sign up
-            </Button>
+              variant="teal"
+              addClassName="mt-6"
+            />
           </Form>
         )}
       </Formik>

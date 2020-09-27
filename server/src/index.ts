@@ -1,23 +1,25 @@
 import { ApolloServer } from 'apollo-server-express';
 import connectRedis from 'connect-redis';
 import cors from 'cors';
+import 'dotenv-safe/config';
 import express from 'express';
 import session from 'express-session';
 import Redis from 'ioredis';
+import path from 'path';
 import 'reflect-metadata';
 import { buildSchema } from 'type-graphql';
 import { createConnection } from 'typeorm';
 import { COOKIE_NAME, __prod__ } from './constants';
+import { Comment } from './entities/Comment';
 import { Post } from './entities/Post';
+import { Upvote } from './entities/Upvote';
 import { User } from './entities/User';
+import { CommentResolver } from './resolvers/comment';
 import { HelloResolver } from './resolvers/hello';
 import { PostResolver } from './resolvers/post';
 import { UserResolver } from './resolvers/user';
-import path from 'path';
-import { Upvote } from './entities/Upvote';
-import { createUserLoader } from './utils/createUserLoader';
 import { createUpvoteLoader } from './utils/createUpvoteLoader';
-import 'dotenv-safe/config';
+import { createUserLoader } from './utils/createUserLoader';
 
 //comment
 const main = async () => {
@@ -25,9 +27,9 @@ const main = async () => {
     type: 'postgres',
     url: process.env.DATABASE_URL,
     logging: true,
-    // synchronize: true,
+    synchronize: true,
     migrations: [path.join(__dirname, './migrations/*')],
-    entities: [Post, User, Upvote],
+    entities: [Post, User, Upvote, Comment],
   });
   await conn.runMigrations();
 
@@ -59,7 +61,7 @@ const main = async () => {
         httpOnly: true,
         sameSite: 'lax', //csrf
         secure: __prod__, // cookie only works in https
-        domain: __prod__ ? 'michaelwenlu.com' : undefined,
+        domain: __prod__ ? '.michaelwenlu.com' : undefined,
       },
       saveUninitialized: false,
       secret: process.env.SESSION_SECRET,
@@ -69,7 +71,7 @@ const main = async () => {
 
   const apolloServer = new ApolloServer({
     schema: await buildSchema({
-      resolvers: [HelloResolver, PostResolver, UserResolver],
+      resolvers: [HelloResolver, PostResolver, UserResolver, CommentResolver],
       validate: false,
     }),
     context: ({ req, res }) => ({

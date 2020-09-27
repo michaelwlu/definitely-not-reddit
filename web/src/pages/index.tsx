@@ -1,5 +1,8 @@
-import { Button, Flex, Stack } from '@chakra-ui/core';
+import Head from 'next/head';
+import React from 'react';
+import Button from '../components/Button';
 import Layout from '../components/Layout';
+import LoadingSpinner from '../components/LoadingSpinner';
 import PostSnippet from '../components/PostSnippet';
 import { usePostsQuery } from '../generated/graphql';
 import { withApollo } from '../utils/withApollo';
@@ -10,23 +13,25 @@ const Index = () => {
     notifyOnNetworkStatusChange: true,
   });
 
-  if (!loading && !data) {
-    return <div>{error?.message}</div>;
-  }
-
   return (
     <Layout>
+      <Head>
+        <title>Home | Definitely Not Reddit</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
       {!data && loading ? (
-        <div>Loading...</div>
+        <div className="flex justify-center">
+          <LoadingSpinner />
+        </div>
       ) : (
-        <Stack spacing={8}>
+        <div className="space-y-6">
           {data!.posts.posts.map((p) =>
             !p ? null : <PostSnippet key={p.id} post={p} />
           )}
-        </Stack>
+        </div>
       )}
       {data && data.posts.hasMore ? (
-        <Flex>
+        <div className="flex justify-center mt-8">
           <Button
             onClick={() => {
               fetchMore({
@@ -37,13 +42,12 @@ const Index = () => {
                 },
               });
             }}
+            text="load more"
+            variant="teal"
+            type="button"
             isLoading={loading}
-            m="auto"
-            my={8}
-          >
-            Load More...
-          </Button>
-        </Flex>
+          />
+        </div>
       ) : null}
     </Layout>
   );

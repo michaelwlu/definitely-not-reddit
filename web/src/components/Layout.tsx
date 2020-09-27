@@ -1,16 +1,24 @@
 import React from 'react';
 import NavBar from './NavBar';
-import Wrapper, { WrapperVariant } from './Wrapper';
 
 interface LayoutProps {
-  variant?: WrapperVariant;
+  variant?: 'small' | 'regular';
 }
 
-const Layout: React.FC<LayoutProps> = ({ children, variant }) => {
+const Layout: React.FC<LayoutProps> = ({ children, variant = 'regular' }) => {
+  const variantClassNames = {
+    small: 'max-w-md',
+    regular: 'max-w-3xl',
+  };
+
   return (
     <>
       <NavBar />
-      <Wrapper variant={variant}>{children}</Wrapper>
+      <main
+        className={`w-full mx-auto mt-8 mb-16 ${variantClassNames[variant]}`}
+      >
+        {children}
+      </main>
     </>
   );
 };

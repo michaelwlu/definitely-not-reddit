@@ -1,9 +1,11 @@
-import { Box, Button } from '@chakra-ui/core';
 import { Form, Formik } from 'formik';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { InputField, TextareaField } from '../../../components/InputTextFields';
+import Button from '../../../components/Button';
+import InputField from '../../../components/InputField';
 import Layout from '../../../components/Layout';
+import LoadingSpinner from '../../../components/LoadingSpinner';
 import {
   usePostQuery,
   useUpdatePostMutation,
@@ -27,7 +29,9 @@ const EditPost: React.FC<EditPostProps> = ({}) => {
   if (loading) {
     return (
       <Layout>
-        <Box>loading...</Box>
+        <div className="flex justify-center">
+          <LoadingSpinner />
+        </div>
       </Layout>
     );
   }
@@ -35,12 +39,16 @@ const EditPost: React.FC<EditPostProps> = ({}) => {
   if (!data?.post) {
     return (
       <Layout>
-        <Box>could not find post</Box>
+        <div className="text-center">Could not find post</div>
       </Layout>
     );
   }
   return (
     <Layout variant="small">
+      <Head>
+        <title>Edit post | Definitely Not Reddit</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
       <Formik
         initialValues={{ title: data.post.title, text: data.post.text }}
         onSubmit={async (values) => {
@@ -49,26 +57,34 @@ const EditPost: React.FC<EditPostProps> = ({}) => {
         }}
       >
         {({ isSubmitting }) => (
-          <Form>
-            <InputField name="title" placeholder="title" label="Title" />
-            <Box mt={4}>
-              <TextareaField
-                name="text"
-                placeholder="text..."
-                label="Body"
-                size="md"
+          <Form className="space-y-4">
+            <InputField
+              as="input"
+              name="title"
+              placeholder="title"
+              label="Title"
+            />
+            <InputField
+              as="textarea"
+              name="text"
+              placeholder="text..."
+              label="Body"
+              rows={5}
+            />
+            <div className="flex items-center space-x-4">
+              <Button
+                text="Update Post"
+                type="submit"
+                isLoading={isSubmitting}
+                variant="teal"
               />
-            </Box>
-            <Button
-              mt={4}
-              ml="auto"
-              type="submit"
-              isLoading={isSubmitting}
-              colorScheme="teal"
-              size="sm"
-            >
-              Update Post
-            </Button>
+              <a
+                className="text-sm text-gray-500 transition duration-150 ease-in-out cursor-pointer hover:text-gray-800"
+                onClick={() => router.back()}
+              >
+                Cancel
+              </a>
+            </div>
           </Form>
         )}
       </Formik>

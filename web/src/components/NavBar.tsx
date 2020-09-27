@@ -1,10 +1,11 @@
 import { useApolloClient } from '@apollo/client';
-import { Box, Button, Flex, Heading, Link } from '@chakra-ui/core';
-import NextLink from 'next/link';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { useLogoutMutation, useMeQuery } from '../generated/graphql';
 import { isServer } from '../utils/isServer';
+import Button from './Button';
+import NavLink from './NavLink';
 
 interface NavBarProps {}
 
@@ -23,56 +24,57 @@ const NavBar: React.FC<NavBarProps> = ({}) => {
   } else if (!data?.me) {
     body = (
       <>
-        <NextLink href="/login">
-          <Link color="white" mr={4}>
-            log in
-          </Link>
-        </NextLink>
-        <NextLink href="/signup">
-          <Link color="white">sign up</Link>
-        </NextLink>
+        <NavLink href="/login" text="log in" />
+        <NavLink href="/signup" text="sign up" />
       </>
     );
     // user logged in
   } else {
     body = (
-      <Flex align="center">
-        <NextLink href="/create-post">
-          <Button as={Link} mr={4} size="sm">
-            Create Post
-          </Button>
-        </NextLink>
-        <Box mr={4} color="white">
-          {data.me.username}
-        </Box>
-        <Button
+      <>
+        <Link href="/create-post">
+          <Button
+            text="create post"
+            type="button"
+            addClassName=""
+            variant="light"
+            isLoading={false}
+          />
+        </Link>
+        <div className="font-medium text-white">{data.me.username}</div>
+        <NavLink
           onClick={async () => {
             await logout();
             await apolloClient.resetStore();
             router.push('/');
           }}
-          isLoading={logoutLoading}
-          variant="link"
-          color="white"
-          fontWeight="medium"
-        >
-          log out
-        </Button>
-      </Flex>
+          href=""
+          text="log out"
+        />
+      </>
     );
   }
 
   return (
-    <Flex zIndex={1} position="sticky" top={0} bg="themeTomato" p={4}>
-      <Flex flex={1} mx="auto" align="center" maxW={1024}>
-        <NextLink href="/">
-          <Link color="white">
-            <Heading size="lg">Definitely Not Reddit</Heading>
-          </Link>
-        </NextLink>
-        <Box ml={'auto'}>{body}</Box>
-      </Flex>
-    </Flex>
+    <nav className="sticky top-0 z-10 bg-orange-400">
+      <div className="max-w-4xl px-2 mx-auto sm:px-6 lg:px-8">
+        <div className="relative flex items-center justify-between h-20">
+          {/* Left side nav */}
+          <div className="flex items-center justify-center flex-1 sm:items-stretch sm:justify-start">
+            <div className="flex items-center flex-shrink-0">
+              <img src="/logo.png" className="w-auto h-8 mr-3" alt="Logo" />
+              <Link href="/">
+                <a className="text-3xl font-semibold text-white transition duration-150 ease-in-out hover:text-orange-100">
+                  Definitely Not Reddit
+                </a>
+              </Link>
+            </div>
+          </div>
+          {/* Right side nav */}
+          <div className="flex items-center space-x-4">{body}</div>
+        </div>
+      </div>
+    </nav>
   );
 };
 

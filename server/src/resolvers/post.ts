@@ -40,7 +40,7 @@ class PaginatedPosts {
 export class PostResolver {
   @FieldResolver(() => String)
   textSnippet(@Root() post: Post) {
-    return post.text.slice(0, 100);
+    return post.text.slice(0, 200);
   }
 
   @FieldResolver(() => User)

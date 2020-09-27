@@ -1,12 +1,15 @@
 import * as React from 'react';
-import { ChakraProvider } from '@chakra-ui/core';
-import theme from '../theme';
+import Head from 'next/head';
+import '../styles/tailwind.css';
 
 function MyApp({ Component, pageProps }: any) {
   return (
-    <ChakraProvider resetCSS theme={theme}>
+    <div>
+      <Head>
+        <link rel="shortcut icon" href="/favicon.png" />
+      </Head>
       <Component {...pageProps} />
-    </ChakraProvider>
+    </div>
   );
 }
 

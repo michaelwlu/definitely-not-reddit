@@ -1,5 +1,5 @@
-import { Box, Flex, Heading, Link, Text } from '@chakra-ui/core';
-import NextLink from 'next/link';
+import Linkify from 'linkifyjs/react';
+import Link from 'next/link';
 import React from 'react';
 import { PostSnippetFragment } from '../generated/graphql';
 import EditDeletePostButtons from './EditDeletePostButtons';
@@ -11,43 +11,39 @@ interface PostSnippetProps {
 
 const PostSnippet: React.FC<PostSnippetProps> = ({ post }) => {
   return (
-    <Flex
+    <div
+      className="flex items-center w-full px-4 py-4 mx-auto border rounded shadow-md"
       key={post.id}
-      align="center"
-      px={5}
-      py={4}
-      shadow="md"
-      borderWidth="1px"
     >
       <UpvoteSection post={post} />
-      <Flex flex={1} justifyContent="space-between" align="center">
-        <Box>
-          <NextLink href="/post/[id]" as={`/post/${post.id}`}>
-            <Link>
-              <Heading fontSize="xl" textColor="gray.700">
+      <section className="flex items-center justify-between flex-1 min-w-0">
+        <div className="flex-1 min-w-0">
+          <h1>
+            <Link href="/post/[id]" as={`/post/${post.id}`}>
+              <a className="text-xl font-bold text-gray-600 transition duration-150 ease-in-out hover:text-black">
                 {post.title}
-              </Heading>
+              </a>
             </Link>
-          </NextLink>
-          <Text mt={1} fontSize="sm" textColor="gray.500">
+          </h1>
+          <p className="text-xs text-gray-400">
             submitted by {post.creator.username}
-          </Text>
-          <Text
-            flex={1}
-            mt={3}
-            fontSize="sm"
-            textColor="gray.700"
-            maxWidth="600px"
-            isTruncated
-          >
-            {post.textSnippet}
-          </Text>
-        </Box>
-        <Box flexShrink={0}>
+          </p>
+          <p className="max-w-xl mt-2 text-sm text-gray-600 truncate">
+            <Linkify
+              options={{
+                className:
+                  'text-teal-500 transition duration-150 ease-in-out hover:text-teal-400',
+              }}
+            >
+              {post.textSnippet}
+            </Linkify>
+          </p>
+        </div>
+        <div className="flex-shrink-0">
           <EditDeletePostButtons id={post.id} creatorId={post.creator.id} />
-        </Box>
-      </Flex>
-    </Flex>
+        </div>
+      </section>
+    </div>
   );
 };
 

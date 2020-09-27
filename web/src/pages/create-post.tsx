@@ -1,8 +1,9 @@
-import { Box, Button } from '@chakra-ui/core';
 import { Form, Formik } from 'formik';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { InputField, TextareaField } from '../components/InputTextFields';
+import Button from '../components/Button';
+import InputField from '../components/InputField';
 import Layout from '../components/Layout';
 import { useCreatePostMutation } from '../generated/graphql';
 import { useIsAuth } from '../utils/useIsAuth';
@@ -14,6 +15,10 @@ const CreatePost: React.FC<{}> = ({}) => {
   const [createPost] = useCreatePostMutation();
   return (
     <Layout variant="small">
+      <Head>
+        <title>Create post | Definitely Not Reddit</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
       <Formik
         initialValues={{ title: '', text: '' }}
         onSubmit={async (values) => {
@@ -29,20 +34,26 @@ const CreatePost: React.FC<{}> = ({}) => {
         }}
       >
         {({ isSubmitting }) => (
-          <Form>
-            <InputField name="title" placeholder="title" label="Title" />
-            <Box mt={4}>
-              <TextareaField name="text" placeholder="text..." label="Body" />
-            </Box>
+          <Form className="space-y-4">
+            <InputField
+              as="input"
+              name="title"
+              placeholder="title"
+              label="Title"
+            />
+            <InputField
+              as="textarea"
+              name="text"
+              placeholder="text..."
+              label="Body"
+              rows={5}
+            />
             <Button
-              mt={4}
-              ml="auto"
+              text="Create Post"
               type="submit"
               isLoading={isSubmitting}
-              colorScheme="teal"
-            >
-              Create Post
-            </Button>
+              variant="teal"
+            />
           </Form>
         )}
       </Formik>

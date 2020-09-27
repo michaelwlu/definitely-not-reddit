@@ -1,16 +1,17 @@
-import { ObjectType, Field, Int } from 'type-graphql';
+import { Field, Int, ObjectType } from 'type-graphql';
 import {
-  Entity,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-  CreateDateColumn,
-  Column,
   BaseEntity,
+  Column,
+  CreateDateColumn,
+  Entity,
   ManyToOne,
   OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
-import { User } from './User';
+import { Comment } from './Comment';
 import { Upvote } from './Upvote';
+import { User } from './User';
 
 @ObjectType()
 @Entity()
@@ -44,6 +45,9 @@ export class Post extends BaseEntity {
 
   @OneToMany(() => Upvote, (upvote) => upvote.post)
   upvotes: Upvote[];
+
+  @OneToMany(() => Comment, (comment) => comment.post)
+  comments: Comment[];
 
   @Field(() => String)
   @CreateDateColumn()

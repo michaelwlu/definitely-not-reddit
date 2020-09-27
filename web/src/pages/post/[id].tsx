@@ -1,12 +1,14 @@
-import { Box, Flex, Heading, Text } from '@chakra-ui/core';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React from 'react';
+import Linkify from 'linkifyjs/react';
 import EditDeletePostButtons from '../../components/EditDeletePostButtons';
 import Layout from '../../components/Layout';
 import UpvoteSection from '../../components/UpvoteSection';
 import { usePostQuery } from '../../generated/graphql';
 import { useGetIntId } from '../../utils/useGetIntId';
 import { withApollo } from '../../utils/withApollo';
+import LoadingSpinner from '../../components/LoadingSpinner';
 
 interface PostProps {}
 
@@ -23,45 +25,60 @@ const Post: React.FC<PostProps> = ({}) => {
   if (loading) {
     return (
       <Layout>
-        <Box>loading...</Box>
+        <div className="flex justify-center">
+          <LoadingSpinner />
+        </div>
       </Layout>
     );
   }
 
   if (error) {
-    return <Box>{error.message}</Box>;
+    return (
+      <Layout>
+        <div className="text-center">{error.message}</div>
+      </Layout>
+    );
   }
 
   if (!data?.post) {
     return (
       <Layout>
-        <Box>Could not find post</Box>
+        <div className="text-center">Could not find post</div>
       </Layout>
     );
   }
 
   return (
-    <Layout>
-      <Flex align="top">
-        <Box mt={2} mr={4}>
+    <Layout variant="regular">
+      <Head>
+        <title>{data.post.title} | Definitely Not Reddit</title>
+        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+      </Head>
+      <div className="flex items-start">
+        <div className="mt-2 mr-2">
           <UpvoteSection post={data.post} />
-        </Box>
-        <Box w="100%">
-          <Heading fontSize="3xl" mb={2}>
-            {data.post.title}
-          </Heading>
-          <Flex mb={6} justify="start" align="center">
-            <Text textColor="gray.500" mr={4}>
+        </div>
+        <div className="w-full mt-1">
+          <h1 className="mb-2 text-2xl font-bold">{data.post.title}</h1>
+          <div className="flex items-center justify-start mb-6">
+            <div className="mr-4 text-gray-500">
               submitted by {data.post.creator.username}
-            </Text>
+            </div>
             <EditDeletePostButtons
               id={data.post.id}
               creatorId={data.post.creator.id}
             />
-          </Flex>
-          <Box>{data.post?.text}</Box>
-        </Box>
-      </Flex>
+          </div>
+          <Linkify
+            options={{
+              className:
+                'text-teal-500 transition duration-150 ease-in-out hover:text-teal-400',
+            }}
+          >
+            {data.post?.text}
+          </Linkify>
+        </div>
+      </div>
     </Layout>
   );
 };
