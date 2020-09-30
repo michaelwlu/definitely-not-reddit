@@ -1,14 +1,16 @@
+import Linkify from 'linkifyjs/react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React from 'react';
-import Linkify from 'linkifyjs/react';
-import EditDeletePostButtons from '../../components/EditDeletePostButtons';
-import Layout from '../../components/Layout';
-import UpvoteSection from '../../components/UpvoteSection';
+import TimeAgo from 'react-timeago';
+import CommentsSection from '../../components/comments/CommentsSection';
+import Layout from '../../components/misc/Layout';
+import LoadingSpinner from '../../components/misc/LoadingSpinner';
+import EditDeletePostButtons from '../../components/posts/EditDeletePostButtons';
+import UpvoteSection from '../../components/posts/UpvoteSection';
 import { usePostQuery } from '../../generated/graphql';
 import { useGetIntId } from '../../utils/useGetIntId';
 import { withApollo } from '../../utils/withApollo';
-import LoadingSpinner from '../../components/LoadingSpinner';
 
 interface PostProps {}
 
@@ -61,9 +63,22 @@ const Post: React.FC<PostProps> = ({}) => {
         <div className="w-full mt-1">
           <h1 className="mb-2 text-2xl font-bold">{data.post.title}</h1>
           <div className="flex items-center justify-start mb-6">
-            <div className="mr-4 text-gray-500">
-              submitted by {data.post.creator.username}
-            </div>
+            <p className="mr-4 text-gray-400">
+              posted by{' '}
+              <span className="text-gray-700">
+                {data.post.creator.username}
+              </span>
+              <span className="text-sm text-gray-400">
+                {' · '}
+                <TimeAgo date={Number(data.post.createdAt)} />
+                {data.post.createdAt !== data.post.updatedAt ? (
+                  <span>
+                    {' · edited '}
+                    <TimeAgo date={Number(data.post.updatedAt)} />
+                  </span>
+                ) : null}
+              </span>
+            </p>
             <EditDeletePostButtons
               id={data.post.id}
               creatorId={data.post.creator.id}
@@ -77,6 +92,7 @@ const Post: React.FC<PostProps> = ({}) => {
           >
             {data.post?.text}
           </Linkify>
+          <CommentsSection postIntId={intId} />
         </div>
       </div>
     </Layout>

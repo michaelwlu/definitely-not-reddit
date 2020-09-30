@@ -1,0 +1,5 @@
+query PostComments($postId: Int!) {
+  postComments(postId: $postId) {
+    ...RegularComment
+  }
+}

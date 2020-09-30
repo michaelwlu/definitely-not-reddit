@@ -2,10 +2,10 @@ import { Form, Formik } from 'formik';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React from 'react';
-import Button from '../../../components/Button';
-import InputField from '../../../components/InputField';
-import Layout from '../../../components/Layout';
-import LoadingSpinner from '../../../components/LoadingSpinner';
+import Button from '../../../components/misc/Button';
+import InputField from '../../../components/misc/InputField';
+import Layout from '../../../components/misc/Layout';
+import LoadingSpinner from '../../../components/misc/LoadingSpinner';
 import {
   usePostQuery,
   useUpdatePostMutation,

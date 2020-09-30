@@ -1,0 +1,11 @@
+fragment RegularComment on Comment {
+  id
+  text
+  user {
+    id
+    username
+  }
+  postId
+  createdAt
+  updatedAt
+}

@@ -7,7 +7,7 @@ import {
   useMeQuery,
   useVoteMutation,
   VoteMutation,
-} from '../generated/graphql';
+} from '../../generated/graphql';
 
 interface UpvoteSectionProps {
   post: RegularPostFragment;

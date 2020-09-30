@@ -4,6 +4,7 @@ fragment RegularPost on Post {
   updatedAt
   title
   points
+  commentCount
   voteStatus
   creator {
     id

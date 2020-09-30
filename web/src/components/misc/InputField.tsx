@@ -1,18 +1,25 @@
 import { ErrorMessage, Field, useField } from 'formik';
-import React, { InputHTMLAttributes, TextareaHTMLAttributes } from 'react';
+import React, {
+  Dispatch,
+  InputHTMLAttributes,
+  SetStateAction,
+  TextareaHTMLAttributes,
+} from 'react';
 
 type InputFieldProps = InputHTMLAttributes<HTMLInputElement> &
   TextareaHTMLAttributes<HTMLTextAreaElement> & {
     name: string;
-    label: string;
+    label?: string;
     as?: 'input' | 'textarea';
     addClassName?: string;
+    // onBlur?: Dispatch<SetStateAction<boolean>>;
   };
 
 const InputField: React.FC<InputFieldProps> = ({
   label,
   as,
   addClassName,
+  // onBlur,
   ...props
 }) => {
   const [field, meta] = useField(props);
@@ -28,6 +35,7 @@ const InputField: React.FC<InputFieldProps> = ({
           meta.touched && meta.error ? 'border-red-300 shadow-outline-red' : ''
         } `}
         aria-invalid={!!meta.error}
+        // onBlur={onBlur ? onBlur(true) : null}
       />
       <ErrorMessage
         component="div"

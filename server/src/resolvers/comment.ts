@@ -6,7 +6,6 @@ import {
   InputType,
   Int,
   Mutation,
-  ObjectType,
   Query,
   Resolver,
   Root,
@@ -27,40 +26,29 @@ class CommentInput {
   text: string;
 }
 
-@ObjectType()
-class PostComments {
-  @Field()
-  postId: number;
-  @Field(() => [Comment])
-  comments: Comment[];
-  @Field()
-  commentCount: number;
-}
-
 @Resolver(Comment)
 export class CommentResolver {
+  // Get user
   @FieldResolver(() => User)
   user(@Root() comment: Comment, @Ctx() { userLoader }: MyContext) {
     return userLoader.load(comment.userId);
   }
 
-  // Read one
+  // Read one comment
   @Query(() => Comment, { nullable: true })
   comment(@Arg('id', () => Int) id: number): Promise<Comment | undefined> {
     return Comment.findOne(id);
   }
 
   // Read post comments
-  @Query(() => PostComments)
+  @Query(() => [Comment])
   async postComments(
     @Arg('postId', () => Int) postId: number
-  ): Promise<PostComments> {
-    const [postComments, commentCount] = await Comment.findAndCount({ postId });
-    return {
-      postId: postId,
-      comments: postComments,
-      commentCount: commentCount,
-    };
+  ): Promise<Comment[]> {
+    return await Comment.find({
+      where: { postId },
+      order: { updatedAt: 'DESC' },
+    });
   }
 
   // Create

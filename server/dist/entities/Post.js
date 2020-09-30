@@ -60,6 +60,10 @@ __decorate([
     __metadata("design:type", Array)
 ], Post.prototype, "comments", void 0);
 __decorate([
+    type_graphql_1.Field(() => type_graphql_1.Int),
+    __metadata("design:type", Number)
+], Post.prototype, "commentCount", void 0);
+__decorate([
     type_graphql_1.Field(() => String),
     typeorm_1.CreateDateColumn(),
     __metadata("design:type", Date)

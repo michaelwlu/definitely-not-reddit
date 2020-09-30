@@ -1,9 +1,9 @@
 import Head from 'next/head';
 import React from 'react';
-import Button from '../components/Button';
-import Layout from '../components/Layout';
-import LoadingSpinner from '../components/LoadingSpinner';
-import PostSnippet from '../components/PostSnippet';
+import Button from '../components/misc/Button';
+import Layout from '../components/misc/Layout';
+import LoadingSpinner from '../components/misc/LoadingSpinner';
+import PostSnippet from '../components/posts/PostSnippet';
 import { usePostsQuery } from '../generated/graphql';
 import { withApollo } from '../utils/withApollo';
 

@@ -16,6 +16,7 @@ import { getConnection } from 'typeorm';
 import { Post } from '../entities/Post';
 import { Upvote } from '../entities/Upvote';
 import { User } from '../entities/User';
+import { Comment } from '../entities/Comment';
 import { isAuth } from '../middleware/isAuth';
 import { MyContext } from '../types';
 
@@ -46,6 +47,11 @@ export class PostResolver {
   @FieldResolver(() => User)
   creator(@Root() post: Post, @Ctx() { userLoader }: MyContext) {
     return userLoader.load(post.creatorId);
+  }
+
+  @FieldResolver(() => Int)
+  commentCount(@Root() post: Post) {
+    return Comment.count({ where: { postId: post.id } });
   }
 
   @FieldResolver(() => Int, { nullable: true })

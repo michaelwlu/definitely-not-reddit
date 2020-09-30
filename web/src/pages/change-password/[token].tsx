@@ -4,9 +4,9 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
-import Button from '../../components/Button';
-import InputField from '../../components/InputField';
-import Layout from '../../components/Layout';
+import Button from '../../components/misc/Button';
+import InputField from '../../components/misc/InputField';
+import Layout from '../../components/misc/Layout';
 import {
   MeDocument,
   MeQuery,

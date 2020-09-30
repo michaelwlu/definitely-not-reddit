@@ -6,21 +6,35 @@ export type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
   addClassName?: string;
   onClick?: () => void;
   isLoading?: boolean;
+  size?: 'regular' | 'small';
 };
 
 const Button: React.FC<ButtonProps> = React.forwardRef(
-  ({ text, addClassName, type, variant, onClick, isLoading = false }) => {
+  ({
+    text,
+    addClassName,
+    type,
+    variant,
+    onClick,
+    isLoading = false,
+    size = 'regular',
+  }) => {
     const variants = {
       light:
         'text-black bg-gray-100 hover:bg-gray-200 focus:border-gray-300 active:bg-gray-300 focus:shadow-outline-gray',
       teal:
         'text-white bg-teal-500 hover:bg-teal-600 focus:border-teal-700 active:bg-teal-700 focus:shadow-outline-teal',
     };
+
+    const sizes = {
+      regular: 'text-sm',
+      small: 'text-xs',
+    };
     return (
       <button
-        className={`flex items-center justify-center px-3 py-1 text-sm font-medium leading-6 whitespace-no-wrap transition duration-150 ease-in-out border border-transparent rounded-md focus:outline-none ${
+        className={`flex items-center justify-center px-3 py-1 font-medium leading-6 whitespace-no-wrap transition duration-150 ease-in-out border border-transparent rounded-md focus:outline-none ${
           variants[variant]
-        } ${addClassName ? addClassName : ''}`}
+        } ${sizes[size]} ${addClassName ? addClassName : ''}`}
         type={type}
         onClick={onClick}
       >

@@ -1,0 +1,5 @@
+query Comment($id: Int!) {
+  comment(id: $id) {
+    ...RegularComment
+  }
+}

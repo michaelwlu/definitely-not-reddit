@@ -2,9 +2,9 @@ import { Form, Formik } from 'formik';
 import Head from 'next/head';
 import Link from 'next/link';
 import React, { useState } from 'react';
-import Button from '../components/Button';
-import InputField from '../components/InputField';
-import Layout from '../components/Layout';
+import Button from '../components/misc/Button';
+import InputField from '../components/misc/InputField';
+import Layout from '../components/misc/Layout';
 import { useForgotPasswordMutation } from '../generated/graphql';
 import { withApollo } from '../utils/withApollo';
 

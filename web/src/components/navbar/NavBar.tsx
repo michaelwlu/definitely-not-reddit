@@ -2,9 +2,9 @@ import { useApolloClient } from '@apollo/client';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { useLogoutMutation, useMeQuery } from '../generated/graphql';
-import { isServer } from '../utils/isServer';
-import Button from './Button';
+import { useLogoutMutation, useMeQuery } from '../../generated/graphql';
+import { isServer } from '../../utils/isServer';
+import Button from '../misc/Button';
 import NavLink from './NavLink';
 
 interface NavBarProps {}
@@ -41,7 +41,7 @@ const NavBar: React.FC<NavBarProps> = ({}) => {
             isLoading={false}
           />
         </Link>
-        <div className="font-medium text-white">{data.me.username}</div>
+        <div className="px-1 font-medium text-white">{data.me.username}</div>
         <NavLink
           onClick={async () => {
             await logout();
@@ -62,16 +62,16 @@ const NavBar: React.FC<NavBarProps> = ({}) => {
           {/* Left side nav */}
           <div className="flex items-center justify-center flex-1 sm:items-stretch sm:justify-start">
             <div className="flex items-center flex-shrink-0">
-              <img src="/logo.png" className="w-auto h-8 mr-3" alt="Logo" />
+              <img src="/logo.png" className="w-auto h-8 mr-1" alt="Logo" />
               <Link href="/">
-                <a className="text-3xl font-semibold text-white transition duration-150 ease-in-out hover:text-orange-100">
+                <a className="px-2 text-3xl font-semibold text-white transition duration-150 ease-in-out rounded-lg hover:text-orange-100 focus:outline-none focus:shadow-outline-orange">
                   Definitely Not Reddit
                 </a>
               </Link>
             </div>
           </div>
           {/* Right side nav */}
-          <div className="flex items-center space-x-4">{body}</div>
+          <div className="flex items-center space-x-3">{body}</div>
         </div>
       </div>
     </nav>

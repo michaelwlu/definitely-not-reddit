@@ -27,6 +27,7 @@ const typeorm_1 = require("typeorm");
 const Post_1 = require("../entities/Post");
 const Upvote_1 = require("../entities/Upvote");
 const User_1 = require("../entities/User");
+const Comment_1 = require("../entities/Comment");
 const isAuth_1 = require("../middleware/isAuth");
 let PostInput = class PostInput {
 };
@@ -60,6 +61,9 @@ let PostResolver = class PostResolver {
     }
     creator(post, { userLoader }) {
         return userLoader.load(post.creatorId);
+    }
+    commentCount(post) {
+        return Comment_1.Comment.count({ where: { postId: post.id } });
     }
     voteStatus(post, { req, upvoteLoader }) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -197,6 +201,13 @@ __decorate([
     __metadata("design:paramtypes", [Post_1.Post, Object]),
     __metadata("design:returntype", void 0)
 ], PostResolver.prototype, "creator", null);
+__decorate([
+    type_graphql_1.FieldResolver(() => type_graphql_1.Int),
+    __param(0, type_graphql_1.Root()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Post_1.Post]),
+    __metadata("design:returntype", void 0)
+], PostResolver.prototype, "commentCount", null);
 __decorate([
     type_graphql_1.FieldResolver(() => type_graphql_1.Int, { nullable: true }),
     __param(0, type_graphql_1.Root()),
