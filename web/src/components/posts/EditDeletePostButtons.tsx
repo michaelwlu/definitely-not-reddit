@@ -15,12 +15,12 @@ const EditDeletePostButtons: React.FC<EditDeletePostButtonsProps> = ({
 
   const [deletePost] = useDeletePostMutation();
 
-  if (meData?.me?.id !== creatorId) {
+  if (meData?.me?.id !== creatorId && meData?.me?.username !== 'admin') {
     return null;
   }
 
   return (
-    <div className="space-x-1">
+    <div className="flex space-x-1">
       <Link href="/post/edit/[id]" as={`/post/edit/${id}`}>
         <button
           className="p-1 text-gray-400 transition duration-150 ease-in-out bg-gray-100 border border-transparent rounded-lg focus:outline-none focus:shadow-outline-gray hover:bg-gray-200 focus:border-gray-300 active:bg-gray-300 hover:text-gray-600"

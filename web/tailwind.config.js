@@ -8,11 +8,17 @@ module.exports = {
   purge: [],
   theme: {
     extend: {
+      colors: {
+        nav: '#e56e02',
+      },
       fontFamily: {
-        sans: ['Inter var', ...defaultTheme.fontFamily.sans],
+        sans: ['Inter', ...defaultTheme.fontFamily.sans],
       },
     },
   },
-  variants: {},
+  variants: {
+    animation: ['responsive', 'motion-safe', 'motion-reduce', 'hover'],
+    borderWidth: ['responsive', 'first', 'hover', 'focus'],
+  },
   plugins: [require('@tailwindcss/ui')],
 };

@@ -33,23 +33,34 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ postIntId }) => {
   }
 
   if (!data?.postComments) {
-    return <div className="text-center">Could not find post</div>;
+    return <div className="text-center">Could not find comments</div>;
   }
   return (
     <EditContext.Provider value={{ sectionEdit, setSectionEdit }}>
-      <div className="mt-16 text-sm font-medium text-gray-500">
-        {data.postComments.length}
-        {data.postComments.length === 1 ? ' comment' : ' comments'}
+      <div className="ml-2 sm:ml-12">
+        <div className="mt-16 text-sm font-medium text-gray-500">
+          <svg
+            className="inline-block w-4 h-4 mr-1"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
+            />
+          </svg>
+          {data.postComments.length}
+          {data.postComments.length === 1 ? ' comment' : ' comments'}
+        </div>
+        <CreateComment postId={postIntId} />
       </div>
-      <CreateComment postId={postIntId} />
-      <div className="mt-8 space-y-5">
+      <div className="my-8">
         {data.postComments.map((c) => (
-          <SingleComment
-            key={c.id}
-            comment={c}
-            // sectionEdit={sectionEdit}
-            // setSectionEdit={setSectionEdit}
-          />
+          <SingleComment key={c.id} comment={c} />
         ))}
       </div>
     </EditContext.Provider>

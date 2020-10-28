@@ -105,6 +105,7 @@ let UserResolver = class UserResolver {
             yield User_1.User.update({ id: userIdNum }, { password: yield argon2_1.default.hash(newPassword) });
             yield redis.del(key);
             req.session.userId = user.id;
+            req.session.username = user.username;
             return { user };
         });
     }
@@ -157,6 +158,7 @@ let UserResolver = class UserResolver {
                 }
             }
             req.session.userId = user === null || user === void 0 ? void 0 : user.id;
+            req.session.username = user === null || user === void 0 ? void 0 : user.username;
             return { user };
         });
     }
@@ -186,6 +188,7 @@ let UserResolver = class UserResolver {
                 };
             }
             req.session.userId = user.id;
+            req.session.username = user.username;
             return { user };
         });
     }

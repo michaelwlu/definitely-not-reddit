@@ -35,6 +35,9 @@ export class Post extends BaseEntity {
   @Field(() => Int, { nullable: true })
   voteStatus: number | null;
 
+  @Field(() => String, { nullable: true })
+  linkPreview: string;
+
   @Field()
   @Column()
   creatorId: number;

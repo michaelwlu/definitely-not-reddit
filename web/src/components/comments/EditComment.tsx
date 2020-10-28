@@ -1,10 +1,10 @@
 import { Form, Formik } from 'formik';
-import React, { Dispatch, SetStateAction, useContext, useState } from 'react';
+import React, { Dispatch, SetStateAction, useContext } from 'react';
 import {
   RegularCommentFragment,
   useUpdateCommentMutation,
 } from '../../generated/graphql';
-import { useIsAuth } from '../../utils/useIsAuth';
+import { commentValidation } from '../../utils/validationSchemas';
 import { withApollo } from '../../utils/withApollo';
 import Button from '../misc/Button';
 import InputField from '../misc/InputField';
@@ -25,12 +25,12 @@ const EditComment: React.FC<EditCommentProps> = ({
   useChanged: { changed, setChanged },
 }) => {
   const { setSectionEdit } = useContext(EditContext);
-
-  useIsAuth();
   const [updateComment] = useUpdateCommentMutation();
   return (
     <Formik
       initialValues={{ text: comment.text }}
+      validationSchema={commentValidation}
+      validateOnBlur={false}
       onSubmit={async (values) => {
         const { errors } = await updateComment({
           variables: { id: comment.id, ...values },
@@ -46,22 +46,22 @@ const EditComment: React.FC<EditCommentProps> = ({
       }}
     >
       {({ isSubmitting }) => (
-        <Form className="space-y-2">
+        <Form className="w-full space-y-2">
           <InputField
             as="textarea"
             name="text"
             aria-label="Body"
-            rows={3}
+            rows={4}
             onChangeCapture={() => setChanged(true)}
           />
           <div className="flex items-center space-x-4">
             <Button
-              text="Save Edits"
               type="submit"
               isLoading={isSubmitting}
-              variant="teal"
-              size="small"
-            />
+              addClassName="text-xs"
+            >
+              Save Edits
+            </Button>
             <a
               className="text-xs text-gray-500 transition duration-150 ease-in-out cursor-pointer hover:text-gray-800"
               onClick={() => {

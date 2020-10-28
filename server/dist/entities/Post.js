@@ -42,6 +42,10 @@ __decorate([
     __metadata("design:type", Object)
 ], Post.prototype, "voteStatus", void 0);
 __decorate([
+    type_graphql_1.Field(() => String, { nullable: true }),
+    __metadata("design:type", String)
+], Post.prototype, "linkPreview", void 0);
+__decorate([
     type_graphql_1.Field(),
     typeorm_1.Column(),
     __metadata("design:type", Number)

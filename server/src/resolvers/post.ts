@@ -19,6 +19,7 @@ import { User } from '../entities/User';
 import { Comment } from '../entities/Comment';
 import { isAuth } from '../middleware/isAuth';
 import { MyContext } from '../types';
+import getPreview from '../utils/getPreview';
 
 // Type for Post
 @InputType()
@@ -42,6 +43,11 @@ export class PostResolver {
   @FieldResolver(() => String)
   textSnippet(@Root() post: Post) {
     return post.text.slice(0, 200);
+  }
+
+  @FieldResolver(() => String, { nullable: true })
+  async linkPreview(@Root() post: Post) {
+    return await getPreview(post.text);
   }
 
   @FieldResolver(() => User)
@@ -207,7 +213,10 @@ export class PostResolver {
     if (!post) {
       return null;
     }
-    if (post.creatorId !== req.session.userId) {
+    if (
+      post.creatorId !== req.session.userId &&
+      req.session.username !== 'admin'
+    ) {
       throw new Error('not authorized');
     }
     const result = await getConnection()
@@ -231,7 +240,10 @@ export class PostResolver {
     if (!post) {
       return false;
     }
-    if (post.creatorId !== req.session.userId) {
+    if (
+      post.creatorId !== req.session.userId &&
+      req.session.username !== 'admin'
+    ) {
       throw new Error('not authorized');
     }
     // await Post.delete({ id, creatorId: req.session.userId });

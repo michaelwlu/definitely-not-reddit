@@ -4,6 +4,8 @@ fragment RegularPost on Post {
   updatedAt
   title
   points
+  text
+  textSnippet
   commentCount
   voteStatus
   creator {

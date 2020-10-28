@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import Button from '../../components/misc/Button';
+import Header from '../../components/misc/Header';
 import InputField from '../../components/misc/InputField';
 import Layout from '../../components/misc/Layout';
 import {
@@ -13,6 +14,7 @@ import {
   useChangePasswordMutation,
 } from '../../generated/graphql';
 import { toErrorMap } from '../../utils/toErrorMap';
+import { userValidation } from '../../utils/validationSchemas';
 import { withApollo } from '../../utils/withApollo';
 
 const ChangePassword: NextPage = () => {
@@ -25,8 +27,11 @@ const ChangePassword: NextPage = () => {
         <title>Change password | Definitely Not Reddit</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
+      <Header>Change Password</Header>
       <Formik
         initialValues={{ newPassword: '' }}
+        validationSchema={userValidation}
+        validateOnBlur={false}
         onSubmit={async (values, { setErrors }) => {
           const response = await changePassword({
             variables: {
@@ -56,7 +61,8 @@ const ChangePassword: NextPage = () => {
             setErrors(errorMap);
           } else if (response.data?.changePassword.user) {
             // worked
-            router.push('/');
+            await router.push('/');
+            window.scrollTo(0, 0);
           }
         }}
       >
@@ -78,13 +84,9 @@ const ChangePassword: NextPage = () => {
                 </Link>
               </div>
             ) : null}
-            <Button
-              text="Submit"
-              type="submit"
-              isLoading={isSubmitting}
-              variant="teal"
-              addClassName="mt-6"
-            />
+            <Button type="submit" isLoading={isSubmitting} addClassName="mt-6">
+              Submit
+            </Button>
           </Form>
         )}
       </Formik>

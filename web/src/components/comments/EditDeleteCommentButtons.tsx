@@ -23,7 +23,7 @@ const EditDeleteCommentButtons: React.FC<EditDeleteCommentButtonsProps> = ({
 
   const [deleteComment] = useDeleteCommentMutation();
 
-  if (meData?.me?.id !== userId) {
+  if (meData?.me?.id !== userId && meData?.me?.username !== 'admin') {
     return null;
   }
 
@@ -71,6 +71,7 @@ const EditDeleteCommentButtons: React.FC<EditDeleteCommentButtonsProps> = ({
                 variables: { id },
                 update: (cache) => {
                   cache.evict({ id: 'Comment:' + id });
+                  cache.evict({ fieldName: 'posts:{}' });
                 },
               })
             : null;

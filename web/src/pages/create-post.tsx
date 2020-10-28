@@ -3,11 +3,13 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React from 'react';
 import Button from '../components/misc/Button';
+import Header from '../components/misc/Header';
 import InputField from '../components/misc/InputField';
 import Layout from '../components/misc/Layout';
 import { useCreatePostMutation } from '../generated/graphql';
 import { useIsAuth } from '../utils/useIsAuth';
 import { withApollo } from '../utils/withApollo';
+import { postValidation } from '../utils/validationSchemas';
 
 const CreatePost: React.FC<{}> = ({}) => {
   const router = useRouter();
@@ -16,20 +18,24 @@ const CreatePost: React.FC<{}> = ({}) => {
   return (
     <Layout variant="small">
       <Head>
-        <title>Create post | Definitely Not Reddit</title>
+        <title>Create Post | Definitely Not Reddit</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
+      <Header>Create Post</Header>
       <Formik
         initialValues={{ title: '', text: '' }}
+        validationSchema={postValidation}
+        validateOnBlur={false}
         onSubmit={async (values) => {
-          const { errors } = await createPost({
+          const { data, errors } = await createPost({
             variables: { input: values },
             update: (cache) => {
               cache.evict({ fieldName: 'posts:{}' });
             },
           });
           if (!errors) {
-            router.push('/');
+            await router.push(`/post/${data?.createPost.id}`);
+            window.scrollTo(0, 0);
           }
         }}
       >
@@ -38,22 +44,19 @@ const CreatePost: React.FC<{}> = ({}) => {
             <InputField
               as="input"
               name="title"
-              placeholder="title"
+              placeholder="Title"
               label="Title"
             />
             <InputField
               as="textarea"
               name="text"
-              placeholder="text..."
+              placeholder="Text (optional)"
               label="Body"
-              rows={5}
+              rows={8}
             />
-            <Button
-              text="Create Post"
-              type="submit"
-              isLoading={isSubmitting}
-              variant="teal"
-            />
+            <Button type="submit" isLoading={isSubmitting}>
+              Submit
+            </Button>
           </Form>
         )}
       </Formik>

@@ -14,17 +14,22 @@ const Index = () => {
   });
 
   return (
-    <Layout>
+    <Layout fullBleed={true}>
       <Head>
         <title>Home | Definitely Not Reddit</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       {!data && loading ? (
-        <div className="flex justify-center">
+        <div className="flex items-center justify-center text-gray-700 h-52">
           <LoadingSpinner />
         </div>
+      ) : error ? (
+        <div className="flex flex-col items-center justify-center">
+          <div className="text-center">Server Error: {error.message}</div>
+          <div className="mt-3 text-center">Plxease try again later</div>
+        </div>
       ) : (
-        <div className="space-y-6">
+        <div className="space-y-6 sm:space-y-6">
           {data!.posts.posts.map((p) =>
             !p ? null : <PostSnippet key={p.id} post={p} />
           )}
@@ -42,11 +47,11 @@ const Index = () => {
                 },
               });
             }}
-            text="load more"
-            variant="teal"
             type="button"
             isLoading={loading}
-          />
+          >
+            load more
+          </Button>
         </div>
       ) : null}
     </Layout>

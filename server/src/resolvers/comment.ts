@@ -76,7 +76,10 @@ export class CommentResolver {
     if (!comment) {
       return null;
     }
-    if (comment.userId !== req.session.userId) {
+    if (
+      comment.userId !== req.session.userId &&
+      req.session.username !== 'admin'
+    ) {
       throw new Error('not authorized');
     }
     const result = await getConnection()
@@ -101,7 +104,10 @@ export class CommentResolver {
     if (!comment) {
       return false;
     }
-    if (comment.userId !== req.session.userId) {
+    if (
+      comment.userId !== req.session.userId &&
+      req.session.username !== 'admin'
+    ) {
       throw new Error('not authorized');
     }
     await Comment.delete({ id: comment.id });

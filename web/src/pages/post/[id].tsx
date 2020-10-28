@@ -1,12 +1,13 @@
-import Linkify from 'linkifyjs/react';
 import Head from 'next/head';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
-import TimeAgo from 'react-timeago';
 import CommentsSection from '../../components/comments/CommentsSection';
+import Button from '../../components/misc/Button';
 import Layout from '../../components/misc/Layout';
 import LoadingSpinner from '../../components/misc/LoadingSpinner';
-import EditDeletePostButtons from '../../components/posts/EditDeletePostButtons';
+import PostBody from '../../components/posts/PostBody';
+import PostOrigin from '../../components/posts/PostOrigin';
 import UpvoteSection from '../../components/posts/UpvoteSection';
 import { usePostQuery } from '../../generated/graphql';
 import { useGetIntId } from '../../utils/useGetIntId';
@@ -45,7 +46,12 @@ const Post: React.FC<PostProps> = ({}) => {
   if (!data?.post) {
     return (
       <Layout>
-        <div className="text-center">Could not find post</div>
+        <div className="text-lg text-center text-gray-600">
+          Could not find post ¯\_(ツ)_/¯
+        </div>
+        <Link href="/">
+          <Button addClassName="mx-auto mt-6">Back to home</Button>
+        </Link>
       </Layout>
     );
   }
@@ -57,44 +63,22 @@ const Post: React.FC<PostProps> = ({}) => {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
       <div className="flex items-start">
-        <div className="mt-2 mr-2">
+        <div className="mt-1 mr-3 sm:mr-4">
           <UpvoteSection post={data.post} />
         </div>
-        <div className="w-full mt-1">
-          <h1 className="mb-2 text-2xl font-bold">{data.post.title}</h1>
-          <div className="flex items-center justify-start mb-6">
-            <p className="mr-4 text-gray-400">
-              posted by{' '}
-              <span className="text-gray-700">
-                {data.post.creator.username}
-              </span>
-              <span className="text-sm text-gray-400">
-                {' · '}
-                <TimeAgo date={Number(data.post.createdAt)} />
-                {data.post.createdAt !== data.post.updatedAt ? (
-                  <span>
-                    {' · edited '}
-                    <TimeAgo date={Number(data.post.updatedAt)} />
-                  </span>
-                ) : null}
-              </span>
-            </p>
-            <EditDeletePostButtons
-              id={data.post.id}
-              creatorId={data.post.creator.id}
-            />
+        <div className="w-full">
+          <h1 className="min-w-0 mb-2 text-2xl font-bold text-gray-700 break-words">
+            {data.post.title}
+          </h1>
+          <PostOrigin post={data.post} />
+          <div className="mt-6">
+            {data.post.text ? (
+              <PostBody text={data.post.text} id={intId} />
+            ) : null}
           </div>
-          <Linkify
-            options={{
-              className:
-                'text-teal-500 transition duration-150 ease-in-out hover:text-teal-400',
-            }}
-          >
-            {data.post?.text}
-          </Linkify>
-          <CommentsSection postIntId={intId} />
         </div>
       </div>
+      <CommentsSection postIntId={intId} />
     </Layout>
   );
 };

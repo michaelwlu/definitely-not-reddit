@@ -20,18 +20,19 @@ import { PostResolver } from './resolvers/post';
 import { UserResolver } from './resolvers/user';
 import { createUpvoteLoader } from './utils/createUpvoteLoader';
 import { createUserLoader } from './utils/createUserLoader';
+import getPreview from './utils/getPreview';
 
 //comment
 const main = async () => {
-  const conn = await createConnection({
+  await createConnection({
     type: 'postgres',
     url: process.env.DATABASE_URL,
     logging: true,
-    synchronize: true,
+    // synchronize: true,
     migrations: [path.join(__dirname, './migrations/*')],
     entities: [Post, User, Upvote, Comment],
   });
-  await conn.runMigrations();
+  // await conn.runMigrations();
 
   // await Post.delete({});
   const app = express();

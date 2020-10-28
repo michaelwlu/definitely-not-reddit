@@ -10,18 +10,29 @@
   },
   "dependencies": {
     "@apollo/client": "^3.2.0",
-    "@types/react-timeago": "^4.1.1",
+    "axios": "^0.21.0",
     "formik": "^2.1.5",
+    "get-urls": "^10.0.0",
     "graphql": "^15.3.0",
     "graphql-tag": "^2.11.0",
+    "is-image-url": "^1.1.8",
+    "is-video": "^1.0.1",
     "isomorphic-unfetch": "^3.0.0",
+    "link-preview-generator": "^0.0.4",
     "linkifyjs": "^2.1.9",
     "next": "^9.1.7",
     "next-apollo": "^5.0.0",
     "react": "^16.12.0",
+    "react-autosize-textarea": "^7.1.0",
     "react-dom": "^16.12.0",
     "react-is": "^16.13.1",
-    "react-timeago": "^4.4.0"
+    "react-placeholder": "^4.0.3",
+    "react-player": "^2.6.2",
+    "react-timeago": "^4.4.0",
+    "react-truncate": "^2.4.0",
+    "valid-url": "^1.0.9",
+    "vercel": "^20.1.1",
+    "yup": "^0.29.3"
   },
   "license": "MIT",
   "devDependencies": {
@@ -32,6 +43,10 @@
     "@tailwindcss/ui": "^0.6.2",
     "@types/linkifyjs": "^2.1.3",
     "@types/node": "^14.6.2",
+    "@types/react-timeago": "^4.1.1",
+    "@types/react-truncate": "^2.3.3",
+    "@types/valid-url": "^1.0.3",
+    "@types/yup": "^0.29.7",
     "tailwindcss": "^1.8.10",
     "typescript": "^4.0.2"
   }

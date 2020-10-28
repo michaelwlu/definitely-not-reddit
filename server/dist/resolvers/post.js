@@ -20,6 +20,9 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PostResolver = void 0;
 const type_graphql_1 = require("type-graphql");
@@ -29,6 +32,7 @@ const Upvote_1 = require("../entities/Upvote");
 const User_1 = require("../entities/User");
 const Comment_1 = require("../entities/Comment");
 const isAuth_1 = require("../middleware/isAuth");
+const getPreview_1 = __importDefault(require("../utils/getPreview"));
 let PostInput = class PostInput {
 };
 __decorate([
@@ -58,6 +62,11 @@ PaginatedPosts = __decorate([
 let PostResolver = class PostResolver {
     textSnippet(post) {
         return post.text.slice(0, 200);
+    }
+    linkPreview(post) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield getPreview_1.default(post.text);
+        });
     }
     creator(post, { userLoader }) {
         return userLoader.load(post.creatorId);
@@ -160,7 +169,8 @@ let PostResolver = class PostResolver {
             if (!post) {
                 return null;
             }
-            if (post.creatorId !== req.session.userId) {
+            if (post.creatorId !== req.session.userId &&
+                req.session.username !== 'admin') {
                 throw new Error('not authorized');
             }
             const result = yield typeorm_1.getConnection()
@@ -179,7 +189,8 @@ let PostResolver = class PostResolver {
             if (!post) {
                 return false;
             }
-            if (post.creatorId !== req.session.userId) {
+            if (post.creatorId !== req.session.userId &&
+                req.session.username !== 'admin') {
                 throw new Error('not authorized');
             }
             yield Post_1.Post.delete({ id: post.id });
@@ -194,6 +205,13 @@ __decorate([
     __metadata("design:paramtypes", [Post_1.Post]),
     __metadata("design:returntype", void 0)
 ], PostResolver.prototype, "textSnippet", null);
+__decorate([
+    type_graphql_1.FieldResolver(() => String, { nullable: true }),
+    __param(0, type_graphql_1.Root()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Post_1.Post]),
+    __metadata("design:returntype", Promise)
+], PostResolver.prototype, "linkPreview", null);
 __decorate([
     type_graphql_1.FieldResolver(() => User_1.User),
     __param(0, type_graphql_1.Root()), __param(1, type_graphql_1.Ctx()),

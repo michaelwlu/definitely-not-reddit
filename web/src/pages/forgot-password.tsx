@@ -3,6 +3,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import React, { useState } from 'react';
 import Button from '../components/misc/Button';
+import Header from '../components/misc/Header';
 import InputField from '../components/misc/InputField';
 import Layout from '../components/misc/Layout';
 import { useForgotPasswordMutation } from '../generated/graphql';
@@ -13,11 +14,12 @@ const ForgotPassword: React.FC<{}> = ({}) => {
   const [forgotPassword] = useForgotPasswordMutation();
 
   return (
-    <Layout variant="small">
+    <Layout variant="small" leftBump={true}>
       <Head>
         <title>Definitely Not Reddit - Forgot password</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
+      <Header>Forgot Password</Header>
       <Formik
         initialValues={{ usernameOrEmail: '' }}
         onSubmit={async (values) => {
@@ -32,26 +34,19 @@ const ForgotPassword: React.FC<{}> = ({}) => {
                 Password reset sent - please check your email
               </div>
               <Link href="/login">
-                <Button
-                  text="Back"
-                  variant="teal"
-                  addClassName="mx-auto mt-6"
-                />
+                <Button addClassName="mx-auto mt-6">Back</Button>
               </Link>
             </div>
           ) : (
-            <Form className="space-y-4">
+            <Form className="space-y-5">
               <InputField
                 name="usernameOrEmail"
                 placeholder="username or email"
                 label="Username or Email"
               />
-              <Button
-                text="Reset password"
-                type="submit"
-                isLoading={isSubmitting}
-                variant="teal"
-              />
+              <Button type="submit" isLoading={isSubmitting}>
+                Reset password
+              </Button>
             </Form>
           )
         }

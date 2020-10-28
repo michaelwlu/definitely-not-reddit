@@ -105,6 +105,7 @@ export class UserResolver {
 
     // log in user after change password
     req.session.userId = user.id;
+    req.session.username = user.username;
 
     return { user };
   }
@@ -187,6 +188,7 @@ export class UserResolver {
     // store user id session
     // set a cookie
     req.session.userId = user?.id;
+    req.session.username = user?.username;
 
     return { user };
   }
@@ -223,6 +225,7 @@ export class UserResolver {
     }
 
     req.session.userId = user.id;
+    req.session.username = user.username;
 
     return { user };
   }

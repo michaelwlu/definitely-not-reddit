@@ -1,12 +1,14 @@
 import { Form, Formik } from 'formik';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useState } from 'react';
 import Button from '../components/misc/Button';
+import Header from '../components/misc/Header';
 import InputField from '../components/misc/InputField';
 import Layout from '../components/misc/Layout';
 import { MeDocument, MeQuery, useRegisterMutation } from '../generated/graphql';
 import { toErrorMap } from '../utils/toErrorMap';
+import { userValidation } from '../utils/validationSchemas';
 import { withApollo } from '../utils/withApollo';
 
 interface signUpProps {}
@@ -14,14 +16,21 @@ interface signUpProps {}
 const SignUp: React.FC<signUpProps> = ({}) => {
   const router = useRouter();
   const [register] = useRegisterMutation();
+  const [validateOnChange, setValidateOnChange] = useState(false);
+
   return (
-    <Layout variant="small">
+    <Layout variant="small" leftBump={true}>
       <Head>
         <title>Sign up | Definitely Not Reddit</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
+      <Header>Sign Up</Header>
       <Formik
         initialValues={{ username: '', email: '', password: '' }}
+        validationSchema={userValidation}
+        validateOnBlur={false}
+        validateOnChange={validateOnChange}
+        enableReinitialize
         onSubmit={async (values, { setErrors }) => {
           const response = await register({
             variables: { options: values },
@@ -39,7 +48,8 @@ const SignUp: React.FC<signUpProps> = ({}) => {
             setErrors(toErrorMap(response.data.register.errors));
           } else if (response.data?.register.user) {
             // worked
-            router.push('/');
+            await router.push('/');
+            window.scrollTo(0, 0);
           }
         }}
       >
@@ -61,15 +71,16 @@ const SignUp: React.FC<signUpProps> = ({}) => {
               placeholder="password"
               label="Password"
               type="password"
-              addClassName="mt-6"
+              addClassName="mt-4"
             />
             <Button
-              text="Sign up"
               type="submit"
+              onClick={() => setValidateOnChange(true)}
               isLoading={isSubmitting}
-              variant="teal"
               addClassName="mt-6"
-            />
+            >
+              Sign up
+            </Button>
           </Form>
         )}
       </Formik>

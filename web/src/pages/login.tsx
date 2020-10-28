@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
 import Button from '../components/misc/Button';
+import Header from '../components/misc/Header';
 import InputField from '../components/misc/InputField';
 import Layout from '../components/misc/Layout';
 import { MeDocument, MeQuery, useLoginMutation } from '../generated/graphql';
@@ -14,11 +15,12 @@ const Login: React.FC<{}> = ({}) => {
   const router = useRouter();
   const [login] = useLoginMutation();
   return (
-    <Layout variant="small">
+    <Layout variant="small" leftBump={true}>
       <Head>
-        <title>Log in | Definitely Not Reddit</title>
+        <title>Log In | Definitely Not Reddit</title>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
       </Head>
+      <Header>Log In</Header>
       <Formik
         initialValues={{ usernameOrEmail: '', password: '' }}
         onSubmit={async (values, { setErrors }) => {
@@ -41,7 +43,8 @@ const Login: React.FC<{}> = ({}) => {
             if (typeof router.query.next === 'string') {
               router.push(router.query.next);
             } else {
-              router.push('/');
+              await router.push('/');
+              window.scrollTo(0, 0);
             }
           }
         }}
@@ -67,12 +70,9 @@ const Login: React.FC<{}> = ({}) => {
                 </a>
               </Link>
             </div>
-            <Button
-              text="Log in"
-              type="submit"
-              isLoading={isSubmitting}
-              variant="teal"
-            />
+            <Button type="submit" isLoading={isSubmitting}>
+              Log in
+            </Button>
           </Form>
         )}
       </Formik>

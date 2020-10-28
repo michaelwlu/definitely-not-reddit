@@ -8,7 +8,8 @@
     "build": "tsc",
     "watch": "tsc -w",
     "dev": "concurrently \"tsc -w\" \"nodemon dist/index.js\"",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "migrations": "typeorm migration:generate -n Setup"
   },
   "keywords": [],
   "author": "",
@@ -40,6 +41,8 @@
     "express-session": "^1.17.1",
     "graphql": "^15.3.0",
     "ioredis": "^4.17.3",
+    "link-preview-generator": "^0.0.4",
+    "linkifyjs": "^2.1.9",
     "nodemailer": "^6.4.11",
     "pg": "^8.3.0",
     "reflect-metadata": "^0.1.13",

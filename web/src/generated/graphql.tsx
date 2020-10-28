@@ -70,6 +70,7 @@ export type Post = {
   text: Scalars['String'];
   points: Scalars['Float'];
   voteStatus?: Maybe<Scalars['Int']>;
+  linkPreview?: Maybe<Scalars['String']>;
   creatorId: Scalars['Float'];
   creator: User;
   commentCount: Scalars['Int'];
@@ -191,7 +192,7 @@ export type UsernamePasswordInput = {
 
 export type PostSnippetFragment = (
   { __typename?: 'Post' }
-  & Pick<Post, 'textSnippet'>
+  & Pick<Post, 'textSnippet' | 'text'>
   & RegularPostFragment
 );
 
@@ -211,7 +212,7 @@ export type RegularErrorFragment = (
 
 export type RegularPostFragment = (
   { __typename?: 'Post' }
-  & Pick<Post, 'id' | 'createdAt' | 'updatedAt' | 'title' | 'points' | 'commentCount' | 'voteStatus'>
+  & Pick<Post, 'id' | 'createdAt' | 'updatedAt' | 'title' | 'points' | 'text' | 'textSnippet' | 'commentCount' | 'voteStatus'>
   & { creator: (
     { __typename?: 'User' }
     & Pick<User, 'id' | 'username'>
@@ -392,6 +393,19 @@ export type CommentQuery = (
   )> }
 );
 
+export type LinkPreviewQueryVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type LinkPreviewQuery = (
+  { __typename?: 'Query' }
+  & { post?: Maybe<(
+    { __typename?: 'Post' }
+    & Pick<Post, 'id' | 'linkPreview'>
+  )> }
+);
+
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -412,7 +426,6 @@ export type PostQuery = (
   { __typename?: 'Query' }
   & { post?: Maybe<(
     { __typename?: 'Post' }
-    & Pick<Post, 'text'>
     & RegularPostFragment
   )> }
 );
@@ -443,7 +456,7 @@ export type PostsQuery = (
     & Pick<PaginatedPosts, 'hasMore'>
     & { posts: Array<(
       { __typename?: 'Post' }
-      & PostSnippetFragment
+      & RegularPostFragment
     )> }
   ) }
 );
@@ -455,6 +468,8 @@ export const RegularPostFragmentDoc = gql`
   updatedAt
   title
   points
+  text
+  textSnippet
   commentCount
   voteStatus
   creator {
@@ -467,6 +482,7 @@ export const PostSnippetFragmentDoc = gql`
     fragment PostSnippet on Post {
   ...RegularPost
   textSnippet
+  text
 }
     ${RegularPostFragmentDoc}`;
 export const RegularCommentFragmentDoc = gql`
@@ -934,6 +950,40 @@ export function useCommentLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Co
 export type CommentQueryHookResult = ReturnType<typeof useCommentQuery>;
 export type CommentLazyQueryHookResult = ReturnType<typeof useCommentLazyQuery>;
 export type CommentQueryResult = Apollo.QueryResult<CommentQuery, CommentQueryVariables>;
+export const LinkPreviewDocument = gql`
+    query LinkPreview($id: Int!) {
+  post(id: $id) {
+    id
+    linkPreview
+  }
+}
+    `;
+
+/**
+ * __useLinkPreviewQuery__
+ *
+ * To run a query within a React component, call `useLinkPreviewQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLinkPreviewQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useLinkPreviewQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useLinkPreviewQuery(baseOptions?: Apollo.QueryHookOptions<LinkPreviewQuery, LinkPreviewQueryVariables>) {
+        return Apollo.useQuery<LinkPreviewQuery, LinkPreviewQueryVariables>(LinkPreviewDocument, baseOptions);
+      }
+export function useLinkPreviewLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LinkPreviewQuery, LinkPreviewQueryVariables>) {
+          return Apollo.useLazyQuery<LinkPreviewQuery, LinkPreviewQueryVariables>(LinkPreviewDocument, baseOptions);
+        }
+export type LinkPreviewQueryHookResult = ReturnType<typeof useLinkPreviewQuery>;
+export type LinkPreviewLazyQueryHookResult = ReturnType<typeof useLinkPreviewLazyQuery>;
+export type LinkPreviewQueryResult = Apollo.QueryResult<LinkPreviewQuery, LinkPreviewQueryVariables>;
 export const MeDocument = gql`
     query Me {
   me {
@@ -970,7 +1020,6 @@ export const PostDocument = gql`
     query Post($id: Int!) {
   post(id: $id) {
     ...RegularPost
-    text
   }
 }
     ${RegularPostFragmentDoc}`;
@@ -1038,11 +1087,11 @@ export const PostsDocument = gql`
   posts(cursor: $cursor, limit: $limit) {
     hasMore
     posts {
-      ...PostSnippet
+      ...RegularPost
     }
   }
 }
-    ${PostSnippetFragmentDoc}`;
+    ${RegularPostFragmentDoc}`;
 
 /**
  * __usePostsQuery__
