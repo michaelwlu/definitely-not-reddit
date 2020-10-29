@@ -6,13 +6,14 @@ import Button from '../components/misc/Button';
 import Header from '../components/misc/Header';
 import InputField from '../components/misc/InputField';
 import Layout from '../components/misc/Layout';
-import { useCreatePostMutation } from '../generated/graphql';
+import { useCreatePostMutation, useMeQuery } from '../generated/graphql';
 import { useIsAuth } from '../utils/useIsAuth';
 import { withApollo } from '../utils/withApollo';
 import { postValidation } from '../utils/validationSchemas';
 
 const CreatePost: React.FC<{}> = ({}) => {
   const router = useRouter();
+
   useIsAuth();
   const [createPost] = useCreatePostMutation();
   return (
@@ -50,8 +51,8 @@ const CreatePost: React.FC<{}> = ({}) => {
             <InputField
               as="textarea"
               name="text"
-              placeholder="Text (optional)"
-              label="Body"
+              placeholder={`e.g. text, website, image/gif/mp4 url, YouTube/Vimeo/Twitch link`}
+              label="Content"
               rows={8}
             />
             <Button type="submit" isLoading={isSubmitting}>

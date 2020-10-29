@@ -81,8 +81,8 @@ const EditPost: React.FC<EditPostProps> = ({}) => {
             <InputField
               as="textarea"
               name="text"
-              placeholder="text..."
-              label="Body"
+              placeholder={`e.g. text, website, image/gif/mp4 url, YouTube/Vimeo/Twitch link`}
+              label="Content"
               rows={8}
             />
             <div className="flex items-center space-x-4">

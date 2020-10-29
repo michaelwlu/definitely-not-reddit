@@ -44,11 +44,13 @@ const LinkPreview: React.FC<LinkPreviewProps> = ({
   }
 
   if (!data?.post?.linkPreview) {
+    console.log('no data');
     return null;
   }
 
   let preview;
   if (data?.post?.linkPreview) {
+    console.table(data.post.linkPreview);
     preview = JSON.parse(data.post.linkPreview);
   }
 

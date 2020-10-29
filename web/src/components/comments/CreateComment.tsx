@@ -6,7 +6,6 @@ import {
   useCreateCommentMutation,
   useMeQuery,
 } from '../../generated/graphql';
-import { useIsAuth } from '../../utils/useIsAuth';
 import { commentValidation } from '../../utils/validationSchemas';
 import { withApollo } from '../../utils/withApollo';
 import Button from '../misc/Button';
@@ -20,15 +19,15 @@ const CreateComment: React.FC<CreateCommentProps> = ({ postId }) => {
   const [createComment] = useCreateCommentMutation();
   const { data, loading } = useMeQuery();
   return !loading && !data?.me ? (
-    <div className="h-20 py-3 pl-3 mt-3 text-gray-400 border border-gray-300 rounded-md bg-gray-50">
+    <div className="h-20 py-3 pl-3 mt-3 text-gray-500 border border-gray-300 rounded-md bg-gray-50">
       <Link href="/login">
-        <a className="font-medium text-orange-400 transition duration-150 ease-in-out cursor-pointer hover:text-gray-500 focus:outline-none focus:text-gray-500">
+        <a className="font-medium text-orange-400 transition duration-150 ease-in-out cursor-pointer hover:text-orange-500 focus:outline-none focus:text-orange-500">
           Log in
         </a>
       </Link>
       {' or '}
       <Link href="/signup">
-        <a className="font-medium text-orange-400 transition duration-150 ease-in-out cursor-pointer hover:text-gray-500 focus:outline-none focus:text-gray-500">
+        <a className="font-medium text-orange-400 transition duration-150 ease-in-out cursor-pointer hover:text-orange-500 focus:outline-none focus:text-orange-500">
           sign up
         </a>
       </Link>{' '}

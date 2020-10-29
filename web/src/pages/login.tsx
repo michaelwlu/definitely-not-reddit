@@ -65,7 +65,7 @@ const Login: React.FC<{}> = ({}) => {
             />
             <div className="flex">
               <Link href="/forgot-password">
-                <a className="mt-2 ml-auto text-sm text-gray-400 transition duration-150 ease-in-out hover:text-gray-500">
+                <a className="mt-2 ml-auto text-sm text-gray-500 transition duration-150 ease-in-out hover:text-teal-500 focus:outline-none focus:text-teal-500">
                   forgot password?
                 </a>
               </Link>
@@ -78,7 +78,7 @@ const Login: React.FC<{}> = ({}) => {
       </Formik>
       <div className="mt-3">
         <Link href="/signup">
-          <a className="text-sm text-gray-400 transition duration-150 ease-in-out hover:text-gray-500">
+          <a className="text-sm text-gray-500 transition duration-150 ease-in-out hover:text-teal-500 focus:outline-none focus:text-teal-500">
             Need an account? Sign up now
           </a>
         </Link>

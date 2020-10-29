@@ -14,7 +14,7 @@ interface PostSnippetProps {
 const PostSnippet: React.FC<PostSnippetProps> = ({ post }) => {
   return (
     <div
-      className="flex items-start w-full py-5 pl-3 pr-4 mx-auto bg-white border-t border-b sm:border sm:shadow-md sm:rounded-lg sm:py-4 sm:pl-4 sm:pr-5"
+      className="flex items-start w-full py-5 pl-3 pr-4 mx-auto bg-white border-t border-b sm:border sm:shadow-md sm:rounded-lg sm:py-4 sm:pl-4 sm:pr-6"
       key={post.id}
     >
       <div className="mt-1">

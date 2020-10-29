@@ -50,11 +50,11 @@ const NavBar: React.FC<NavBarProps> = ({}) => {
   } else {
     rightNav = (
       <>
-        <div className="px-1 italic font-semibold text-white truncate w-36">
-          {data.me.username}
+        <div className="flex items-center justify-center flex-shrink-0 mr-3 text-base font-medium text-white bg-gray-400 rounded-full w-9 h-9">
+          {data.me.username[0].toUpperCase()}
         </div>
         <Link href="/create-post">
-          <button className="flex items-center justify-center px-2 py-1 text-xs font-semibold leading-6 text-gray-800 whitespace-no-wrap transition duration-150 ease-in-out bg-gray-100 border border-transparent rounded-md md:text-sm focus:outline-none hover:bg-gray-200 focus:border-gray-300 focus:bg-gray-200 active:bg-gray-200">
+          <button className="flex items-center justify-center px-2.5 py-1.5 font-semibold leading-6 text-gray-600 whitespace-no-wrap transition duration-200 ease-in-out border-2 border-gray-100 bg-gray-100 rounded-lg text-sm focus:outline-none hover:bg-white hover:text-teal-500 hover:border-white focus:bg-white focus:text-teal-500 focus:border-white focus:shadow-outline-orange">
             create post
           </button>
         </Link>
@@ -73,9 +73,6 @@ const NavBar: React.FC<NavBarProps> = ({}) => {
     );
     dropdownNav = (
       <>
-        <div className="block px-5 py-2 text-lg italic font-semibold text-white truncate">
-          {data.me.username}
-        </div>
         <MobileNavLink href="/create-post">create post</MobileNavLink>
         <MobileNavLink
           onClick={async () => {
@@ -95,7 +92,7 @@ const NavBar: React.FC<NavBarProps> = ({}) => {
 
   return (
     // Nav background
-    <nav className="shadow-md bg-nav">
+    <nav className="w-full shadow-sm sm:shadow-md bg-nav">
       {/* Nav container */}
       <div className="max-w-4xl pl-3 pr-3 mx-auto sm:px-4">
         <div className="flex items-center justify-between h-20">
@@ -136,6 +133,11 @@ const NavBar: React.FC<NavBarProps> = ({}) => {
           </div>
           {/* Mobile menu button */}
           <div className="flex items-center space-x-2 sm:hidden">
+            {data?.me ? (
+              <div className="flex items-center justify-center flex-shrink-0 text-base font-medium text-white bg-gray-400 rounded-full w-9 h-9">
+                {data.me.username[0].toUpperCase()}
+              </div>
+            ) : null}
             <button
               onClick={() => setDropdown(!dropdown)}
               className={`inline-flex p-1 text-white rounded-md focus:outline-none focus:bg-opacity-25 ${
@@ -177,7 +179,11 @@ const NavBar: React.FC<NavBarProps> = ({}) => {
         </div>
       </div>
       {/* Dropdown menu */}
-      <div className={`sm:hidden ${dropdown ? 'block' : 'hidden'}`}>
+      <div
+        className={`${
+          dropdown ? 'block' : 'hidden'
+        } sm:hidden absolute bg-nav w-full shadow-sm`}
+      >
         <div className="">{dropdownNav}</div>
       </div>
     </nav>

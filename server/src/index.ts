@@ -85,6 +85,8 @@ const main = async () => {
   });
 
   apolloServer.applyMiddleware({ app, cors: false });
+  console.log('next step is run getPreview');
+  getPreview('https://www.nytimes.com/wirecutter/');
 
   app.listen(Number(process.env.PORT), () => {
     console.log('server started on localhost:4000');

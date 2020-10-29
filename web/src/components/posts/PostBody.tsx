@@ -101,9 +101,18 @@ const PostBody: React.FC<PostBodyProps> = ({ text, id, isSnippet = false }) => {
     // build video file element
   } else if (isVideo(href)) {
     body = (
-      <video controls autoPlay muted className="max-w-full max-h-96">
-        <source src={href} />
-      </video>
+      <>
+        <div className="block sm:hidden">
+          <video controls muted className="max-w-full max-h-96">
+            <source src={href} />
+          </video>
+        </div>
+        <div className="hidden sm:block">
+          <video controls autoPlay muted className="max-w-full max-h-96">
+            <source src={href} />
+          </video>
+        </div>
+      </>
     );
 
     // build react player post

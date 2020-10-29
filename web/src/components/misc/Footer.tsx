@@ -2,9 +2,9 @@ import React from 'react';
 
 const Footer: React.FC = () => {
   return (
-    <footer className="absolute bottom-0 left-0 flex justify-center w-full mx-auto mb-8 space-x-2 text-sm">
-      <div className="text-gray-500">Developed by Michael W. Lu</div>
-      <div className="text-gray-400">|</div>
+    <footer className="absolute bottom-0 left-0 flex justify-center w-full mx-auto mb-8 space-x-2 text-sm bg-gray-100">
+      <div className="text-gray-600">Developed by Michael W. Lu</div>
+      <div className="text-gray-500">|</div>
       <a
         href="https://github.com/michaelwlu/definitely-not-reddit"
         className="inline-flex items-center font-medium text-teal-500 transition duration-150 ease-in-out hover:text-teal-400 focus:outline-none focus:text-teal-400"
