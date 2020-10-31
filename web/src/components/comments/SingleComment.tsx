@@ -8,9 +8,13 @@ import EditDeleteCommentButtons from './EditDeleteCommentButtons';
 
 interface SingleCommentProps {
   comment: RegularCommentFragment;
+  postCreatorId: number;
 }
 
-const SingleComment: React.FC<SingleCommentProps> = ({ comment }) => {
+const SingleComment: React.FC<SingleCommentProps> = ({
+  comment,
+  postCreatorId,
+}) => {
   const [edit, setEdit] = useState<boolean>(false);
   const [changed, setChanged] = useState<boolean>(false);
   const { sectionEdit } = useContext(EditContext);
@@ -27,6 +31,8 @@ const SingleComment: React.FC<SingleCommentProps> = ({ comment }) => {
             className={`${
               meData?.me?.id === comment.user.id
                 ? 'text-teal-500'
+                : meData?.me?.id === postCreatorId
+                ? 'text-orange-500'
                 : 'text-gray-500'
             } mr-2 text-sm`}
           >

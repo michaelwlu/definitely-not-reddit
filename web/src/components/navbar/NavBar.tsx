@@ -92,7 +92,7 @@ const NavBar: React.FC<NavBarProps> = ({}) => {
 
   return (
     // Nav background
-    <nav className="w-full shadow-sm sm:shadow-md bg-nav">
+    <nav className="relative z-10 w-full shadow-sm sm:shadow-md bg-nav">
       {/* Nav container */}
       <div className="max-w-4xl pl-3 pr-3 mx-auto sm:px-4">
         <div className="flex items-center justify-between h-20">
@@ -182,7 +182,7 @@ const NavBar: React.FC<NavBarProps> = ({}) => {
       <div
         className={`${
           dropdown ? 'block' : 'hidden'
-        } sm:hidden absolute bg-nav w-full shadow-sm`}
+        } sm:hidden absolute bg-nav w-full shadow-sm border-b border-gray-200`}
       >
         <div className="">{dropdownNav}</div>
       </div>

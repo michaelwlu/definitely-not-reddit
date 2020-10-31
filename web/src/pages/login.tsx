@@ -1,5 +1,4 @@
 import { Form, Formik } from 'formik';
-import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -7,6 +6,7 @@ import Button from '../components/misc/Button';
 import Header from '../components/misc/Header';
 import InputField from '../components/misc/InputField';
 import Layout from '../components/misc/Layout';
+import Meta from '../components/misc/Meta';
 import { MeDocument, MeQuery, useLoginMutation } from '../generated/graphql';
 import { toErrorMap } from '../utils/toErrorMap';
 import { withApollo } from '../utils/withApollo';
@@ -16,10 +16,7 @@ const Login: React.FC<{}> = ({}) => {
   const [login] = useLoginMutation();
   return (
     <Layout variant="small" leftBump={true}>
-      <Head>
-        <title>Log In | Definitely Not Reddit</title>
-        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-      </Head>
+      <Meta title="Log in" />
       <Header>Log In</Header>
       <Formik
         initialValues={{ usernameOrEmail: '', password: '' }}

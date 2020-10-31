@@ -8,9 +8,13 @@ import SingleComment from './SingleComment';
 
 interface CommentsSectionProps {
   postIntId: number;
+  postCreatorId: number;
 }
 
-const CommentsSection: React.FC<CommentsSectionProps> = ({ postIntId }) => {
+const CommentsSection: React.FC<CommentsSectionProps> = ({
+  postIntId,
+  postCreatorId,
+}) => {
   const [sectionEdit, setSectionEdit] = useState<number | null>(null);
 
   const { data, error, loading } = usePostCommentsQuery({
@@ -18,6 +22,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ postIntId }) => {
     variables: {
       postId: postIntId,
     },
+    errorPolicy: 'all',
   });
 
   if (loading) {
@@ -38,7 +43,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ postIntId }) => {
   return (
     <EditContext.Provider value={{ sectionEdit, setSectionEdit }}>
       <div className="ml-2 sm:ml-12">
-        <div className="mt-16 text-sm font-medium text-gray-500">
+        <div className="text-sm font-medium text-gray-500 mt-14">
           <svg
             className="inline-block w-4 h-4 mr-1"
             fill="none"
@@ -60,7 +65,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({ postIntId }) => {
       </div>
       <div className="my-8">
         {data.postComments.map((c) => (
-          <SingleComment key={c.id} comment={c} />
+          <SingleComment key={c.id} comment={c} creatorId={postCreatorId} />
         ))}
       </div>
     </EditContext.Provider>

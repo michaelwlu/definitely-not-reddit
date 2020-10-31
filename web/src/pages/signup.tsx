@@ -1,11 +1,11 @@
 import { Form, Formik } from 'formik';
-import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import Button from '../components/misc/Button';
 import Header from '../components/misc/Header';
 import InputField from '../components/misc/InputField';
 import Layout from '../components/misc/Layout';
+import Meta from '../components/misc/Meta';
 import { MeDocument, MeQuery, useRegisterMutation } from '../generated/graphql';
 import { toErrorMap } from '../utils/toErrorMap';
 import { userValidation } from '../utils/validationSchemas';
@@ -20,10 +20,7 @@ const SignUp: React.FC<signUpProps> = ({}) => {
 
   return (
     <Layout variant="small" leftBump={true}>
-      <Head>
-        <title>Sign up | Definitely Not Reddit</title>
-        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-      </Head>
+      <Meta title="Sign up" />
       <Header>Sign Up</Header>
       <Formik
         initialValues={{ username: '', email: '', password: '' }}

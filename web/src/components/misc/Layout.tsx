@@ -26,7 +26,11 @@ const Layout: React.FC<LayoutProps> = ({
         className={`w-full sm:pr-6 lg:pr-0 mx-auto pb-28 ${
           variantClassNames[variant]
         } ${
-          fullBleed ? 'pt-8 sm:pl-5' : leftBump ? 'pl-5 pr-4 pt-8' : 'px-4 pt-8'
+          fullBleed
+            ? 'pt-2 sm:pt-6 sm:pl-5'
+            : leftBump
+            ? 'pl-5 pr-4 pt-8'
+            : 'px-4 pt-8'
         }`}
       >
         {children}

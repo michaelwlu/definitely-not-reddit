@@ -109,7 +109,7 @@ const UpvoteSection: React.FC<UpvoteSectionProps> = ({ post }) => {
         className={`rounded-lg transition duration-150 ease-in-out p-1 border border-transparent focus:outline-none focus:shadow-outline-gray ${
           post.voteStatus === 1
             ? `text-white bg-${voteColor}-400 hover:bg-${voteColor}-500 focus:border-${voteColor}-100 active:bg-${voteColor}-500`
-            : 'text-gray-500 hover:text-gray-600 bg-gray-100 hover:bg-gray-200 focus:border-gray-300 active:bg-gray-300'
+            : 'text-gray-500 hover:text-gray-600 bg-gray-200 hover:bg-gray-300 focus:border-gray-100 active:bg-gray-300'
         }`}
       >
         <svg
@@ -156,7 +156,7 @@ const UpvoteSection: React.FC<UpvoteSectionProps> = ({ post }) => {
         className={`rounded-lg transition duration-150 ease-in-out p-1 border border-transparent focus:outline-none focus:shadow-outline-gray ${
           post.voteStatus === -1
             ? `text-white bg-${voteColor}-400 hover:bg-${voteColor}-500 focus:border-${voteColor}-100 active:bg-${voteColor}-500`
-            : 'text-gray-500 hover:text-gray-600 bg-gray-100 hover:bg-gray-200 focus:border-gray-300 active:bg-gray-300'
+            : 'text-gray-500 hover:text-gray-600 bg-gray-200 hover:bg-gray-300 focus:border-gray-100 active:bg-gray-300'
         }`}
       >
         <svg

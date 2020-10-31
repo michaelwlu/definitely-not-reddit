@@ -34,7 +34,6 @@ const post_1 = require("./resolvers/post");
 const user_1 = require("./resolvers/user");
 const createUpvoteLoader_1 = require("./utils/createUpvoteLoader");
 const createUserLoader_1 = require("./utils/createUserLoader");
-const getPreview_1 = __importDefault(require("./utils/getPreview"));
 const main = () => __awaiter(void 0, void 0, void 0, function* () {
     yield typeorm_1.createConnection({
         type: 'postgres',
@@ -82,9 +81,8 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
         }),
     });
     apolloServer.applyMiddleware({ app, cors: false });
-    getPreview_1.default('https://www.nytimes.com/wirecutter/');
     app.listen(Number(process.env.PORT), () => {
-        console.log('server started on localhost:4000');
+        console.log(`server started on localhost:${process.env.PORT}`);
     });
 });
 main().catch((err) => {

@@ -1,27 +1,26 @@
 import { Form, Formik } from 'formik';
-import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React from 'react';
 import Button from '../components/misc/Button';
 import Header from '../components/misc/Header';
 import InputField from '../components/misc/InputField';
 import Layout from '../components/misc/Layout';
-import { useCreatePostMutation, useMeQuery } from '../generated/graphql';
+import Meta from '../components/misc/Meta';
+import ContentLink from '../components/posts/ContentLink';
+import { useCreatePostMutation } from '../generated/graphql';
 import { useIsAuth } from '../utils/useIsAuth';
-import { withApollo } from '../utils/withApollo';
 import { postValidation } from '../utils/validationSchemas';
+import { withApollo } from '../utils/withApollo';
 
 const CreatePost: React.FC<{}> = ({}) => {
   const router = useRouter();
 
   useIsAuth();
   const [createPost] = useCreatePostMutation();
+
   return (
     <Layout variant="small">
-      <Head>
-        <title>Create Post | Definitely Not Reddit</title>
-        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-      </Head>
+      <Meta title="Create post" />
       <Header>Create Post</Header>
       <Formik
         initialValues={{ title: '', text: '' }}
@@ -40,7 +39,7 @@ const CreatePost: React.FC<{}> = ({}) => {
           }
         }}
       >
-        {({ isSubmitting }) => (
+        {({ isSubmitting, values }) => (
           <Form className="space-y-4">
             <InputField
               as="input"
@@ -51,10 +50,11 @@ const CreatePost: React.FC<{}> = ({}) => {
             <InputField
               as="textarea"
               name="text"
-              placeholder={`e.g. text, website, image/gif/mp4 url, YouTube/Vimeo/Twitch link`}
+              placeholder={`e.g. text, links, images, gifs, YouTube, Twitch, etc.`}
               label="Content"
               rows={8}
             />
+            <ContentLink text={values.text} />
             <Button type="submit" isLoading={isSubmitting}>
               Submit
             </Button>

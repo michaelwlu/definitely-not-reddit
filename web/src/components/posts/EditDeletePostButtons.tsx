@@ -23,7 +23,7 @@ const EditDeletePostButtons: React.FC<EditDeletePostButtonsProps> = ({
     <div className="flex space-x-1">
       <Link href="/post/edit/[id]" as={`/post/edit/${id}`}>
         <button
-          className="p-1 text-gray-400 transition duration-150 ease-in-out bg-gray-100 border border-transparent rounded-lg focus:outline-none hover:bg-gray-200 focus:border-gray-300 active:bg-gray-300 hover:text-gray-600"
+          className="p-1 text-gray-400 transition duration-150 ease-in-out bg-gray-200 border border-transparent rounded-lg focus:outline-none hover:bg-gray-300 focus:bg-gray-300 active:bg-gray-300 hover:text-gray-600"
           aria-label="Edit Post"
         >
           <svg
@@ -37,7 +37,7 @@ const EditDeletePostButtons: React.FC<EditDeletePostButtonsProps> = ({
         </button>
       </Link>
       <button
-        className="p-1 text-gray-400 transition duration-150 ease-in-out bg-gray-100 border border-transparent rounded-lg focus:outline-none hover:bg-gray-200 focus:border-gray-300 active:bg-gray-300 hover:text-gray-600"
+        className="p-1 text-gray-400 transition duration-150 ease-in-out bg-gray-200 border border-transparent rounded-lg focus:outline-none hover:bg-gray-300 focus:bg-gray-300 active:bg-gray-300 hover:text-gray-600"
         aria-label="Delete Post"
         onClick={() => {
           confirm('Are you sure you would like to delete this post?')

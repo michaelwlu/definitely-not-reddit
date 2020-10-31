@@ -1,5 +1,4 @@
 import { Form, Formik } from 'formik';
-import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -8,6 +7,8 @@ import Header from '../../../components/misc/Header';
 import InputField from '../../../components/misc/InputField';
 import Layout from '../../../components/misc/Layout';
 import LoadingSpinner from '../../../components/misc/LoadingSpinner';
+import Meta from '../../../components/misc/Meta';
+import ContentLink from '../../../components/posts/ContentLink';
 import {
   usePostQuery,
   useUpdatePostMutation,
@@ -26,12 +27,14 @@ const EditPost: React.FC<EditPostProps> = ({}) => {
     variables: {
       id: intId,
     },
+    errorPolicy: 'all',
   });
   const [updatePost] = useUpdatePostMutation();
 
   if (loading) {
     return (
       <Layout>
+        <Meta />
         <div className="flex justify-center">
           <LoadingSpinner />
         </div>
@@ -42,6 +45,7 @@ const EditPost: React.FC<EditPostProps> = ({}) => {
   if (!data?.post) {
     return (
       <Layout>
+        <Meta title="Error" />
         <div className="text-center text-gray-700">Could not find post</div>
         <Link href="/">
           <Button addClassName="mx-auto mt-6">Back to home</Button>
@@ -51,10 +55,7 @@ const EditPost: React.FC<EditPostProps> = ({}) => {
   }
   return (
     <Layout variant="small">
-      <Head>
-        <title>Edit post | Definitely Not Reddit</title>
-        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-      </Head>
+      <Meta title="Edit post" />
       <Header>Edit Post</Header>
       <Formik
         initialValues={{ title: data.post.title, text: data.post.text }}
@@ -70,7 +71,7 @@ const EditPost: React.FC<EditPostProps> = ({}) => {
           router.push('/post/[id]', `/post/${data?.post?.id}`);
         }}
       >
-        {({ isSubmitting }) => (
+        {({ isSubmitting, values }) => (
           <Form className="space-y-4">
             <InputField
               as="input"
@@ -85,6 +86,7 @@ const EditPost: React.FC<EditPostProps> = ({}) => {
               label="Content"
               rows={8}
             />
+            <ContentLink text={values.text} />
             <div className="flex items-center space-x-4">
               <Button type="submit" isLoading={isSubmitting}>
                 Update post

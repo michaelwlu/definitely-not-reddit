@@ -31,6 +31,7 @@ const EditComment: React.FC<EditCommentProps> = ({
       initialValues={{ text: comment.text }}
       validationSchema={commentValidation}
       validateOnBlur={false}
+      validateOnChange={false}
       onSubmit={async (values) => {
         const { errors } = await updateComment({
           variables: { id: comment.id, ...values },

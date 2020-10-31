@@ -20,9 +20,7 @@ import { PostResolver } from './resolvers/post';
 import { UserResolver } from './resolvers/user';
 import { createUpvoteLoader } from './utils/createUpvoteLoader';
 import { createUserLoader } from './utils/createUserLoader';
-import getPreview from './utils/getPreview';
 
-//comment
 const main = async () => {
   await createConnection({
     type: 'postgres',
@@ -85,11 +83,9 @@ const main = async () => {
   });
 
   apolloServer.applyMiddleware({ app, cors: false });
-  console.log('next step is run getPreview');
-  getPreview('https://www.nytimes.com/wirecutter/');
 
   app.listen(Number(process.env.PORT), () => {
-    console.log('server started on localhost:4000');
+    console.log(`server started on localhost:${process.env.PORT}`);
   });
 };
 

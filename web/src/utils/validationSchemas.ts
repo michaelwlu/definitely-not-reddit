@@ -5,7 +5,7 @@ const maxError = (val: number) => `Maximum character limit of ${val}`;
 
 export const postValidation = Yup.object({
   title: Yup.string().required('Required').max(120, maxError(120)),
-  text: Yup.string().optional(),
+  text: Yup.string().optional().max(40000, maxError(40000)),
 });
 
 export const commentValidation = Yup.object({

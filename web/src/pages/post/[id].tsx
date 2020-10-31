@@ -1,4 +1,3 @@
-import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -6,6 +5,7 @@ import CommentsSection from '../../components/comments/CommentsSection';
 import Button from '../../components/misc/Button';
 import Layout from '../../components/misc/Layout';
 import LoadingSpinner from '../../components/misc/LoadingSpinner';
+import Meta from '../../components/misc/Meta';
 import PostBody from '../../components/posts/PostBody';
 import PostOrigin from '../../components/posts/PostOrigin';
 import UpvoteSection from '../../components/posts/UpvoteSection';
@@ -23,11 +23,13 @@ const Post: React.FC<PostProps> = ({}) => {
     variables: {
       id: intId,
     },
+    errorPolicy: 'all',
   });
 
   if (loading) {
     return (
       <Layout>
+        <Meta />
         <div className="flex justify-center">
           <LoadingSpinner />
         </div>
@@ -38,6 +40,7 @@ const Post: React.FC<PostProps> = ({}) => {
   if (error) {
     return (
       <Layout>
+        <Meta title="Error" />
         <div className="text-center">{error.message}</div>
       </Layout>
     );
@@ -46,6 +49,7 @@ const Post: React.FC<PostProps> = ({}) => {
   if (!data?.post) {
     return (
       <Layout>
+        <Meta title="Error" />
         <div className="text-lg text-center text-gray-600">
           Could not find post ¯\_(ツ)_/¯
         </div>
@@ -58,15 +62,12 @@ const Post: React.FC<PostProps> = ({}) => {
 
   return (
     <Layout variant="regular">
-      <Head>
-        <title>{data.post.title} | Definitely Not Reddit</title>
-        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-      </Head>
+      <Meta title={data.post.title} />
       <div className="flex items-start">
-        <div className="mt-1 mr-3 sm:mr-4">
+        <div className="mr-3 sm:mt-5 sm:mr-4">
           <UpvoteSection post={data.post} />
         </div>
-        <div className="w-full">
+        <div className="w-full pb-7 sm:pl-7 sm:pr-8 sm:pt-5 sm:pb-8 sm:bg-white sm:border sm:border-gray-300 sm:rounded-md ">
           <h1 className="min-w-0 mb-2 text-2xl font-bold text-gray-700 break-words">
             {data.post.title}
           </h1>
@@ -78,7 +79,7 @@ const Post: React.FC<PostProps> = ({}) => {
           </div>
         </div>
       </div>
-      <CommentsSection postIntId={intId} />
+      <CommentsSection postIntId={intId} postCreatorId={data.post.creator.id} />
     </Layout>
   );
 };

@@ -19,7 +19,7 @@ import { User } from '../entities/User';
 import { Comment } from '../entities/Comment';
 import { isAuth } from '../middleware/isAuth';
 import { MyContext } from '../types';
-import getPreview from '../utils/getPreview';
+import getPreview from '../utils/link-preview/getPreview';
 
 // Type for Post
 @InputType()

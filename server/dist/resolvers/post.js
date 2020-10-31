@@ -32,7 +32,7 @@ const Upvote_1 = require("../entities/Upvote");
 const User_1 = require("../entities/User");
 const Comment_1 = require("../entities/Comment");
 const isAuth_1 = require("../middleware/isAuth");
-const getPreview_1 = __importDefault(require("../utils/getPreview"));
+const getPreview_1 = __importDefault(require("../utils/link-preview/getPreview"));
 let PostInput = class PostInput {
 };
 __decorate([

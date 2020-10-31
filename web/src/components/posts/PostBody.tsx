@@ -21,8 +21,8 @@ const PostBody: React.FC<PostBodyProps> = ({ text, id, isSnippet = false }) => {
     return (
       <div
         className={`${
-          isSnippet ? 'text-sm truncate mb-2' : 'mb-4'
-        } break-words mt-3`}
+          isSnippet ? 'text-sm truncate-pre mb-2 h-6' : 'mb-4'
+        } break-words mt-3 whitespace-pre-line`}
       >
         {text}
       </div>
@@ -47,13 +47,13 @@ const PostBody: React.FC<PostBodyProps> = ({ text, id, isSnippet = false }) => {
   const textBody = (
     <div
       className={`${
-        isSnippet ? 'text-sm truncate mb-2' : 'mb-4'
-      } break-words overflow-hidden`}
+        isSnippet ? 'text-sm truncate-pre h-6 mb-2' : 'mb-4'
+      } break-words overflow-hidden whitespace-pre-line`}
     >
       <Linkify
         options={{
           className:
-            'text-teal-500 transition duration-150 ease-in-out hover:text-teal-400',
+            'text-teal-500 transition duration-150 ease-in-out hover:text-teal-400 focus:text-teal-400 focus:outline-none',
           attributes: {
             rel: 'noopener',
           },
@@ -71,7 +71,7 @@ const PostBody: React.FC<PostBodyProps> = ({ text, id, isSnippet = false }) => {
         href={href}
         target="_blank"
         rel="noopener"
-        className="text-sm text-teal-500 transition duration-150 ease-in-out hover:text-teal-400"
+        className="text-sm text-teal-500 transition duration-150 ease-in-out hover:text-teal-400 focus:text-teal-400 focus:outline-none"
       >
         {href}
         <svg

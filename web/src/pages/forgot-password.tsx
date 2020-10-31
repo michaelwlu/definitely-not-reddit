@@ -1,11 +1,11 @@
 import { Form, Formik } from 'formik';
-import Head from 'next/head';
 import Link from 'next/link';
 import React, { useState } from 'react';
 import Button from '../components/misc/Button';
 import Header from '../components/misc/Header';
 import InputField from '../components/misc/InputField';
 import Layout from '../components/misc/Layout';
+import Meta from '../components/misc/Meta';
 import { useForgotPasswordMutation } from '../generated/graphql';
 import { withApollo } from '../utils/withApollo';
 
@@ -15,10 +15,7 @@ const ForgotPassword: React.FC<{}> = ({}) => {
 
   return (
     <Layout variant="small" leftBump={true}>
-      <Head>
-        <title>Definitely Not Reddit - Forgot password</title>
-        <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-      </Head>
+      <Meta title="Forgot password" />
       <Header>Forgot Password</Header>
       <Formik
         initialValues={{ usernameOrEmail: '' }}

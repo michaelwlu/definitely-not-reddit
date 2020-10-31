@@ -15,16 +15,12 @@ const MobileNavLink: React.FC<MobileNavLinkProps> = ({
 }) => {
   return (
     <Link href={href} passHref>
-      <button
+      <a
         onClick={onClick}
-        className={
-          'block py-4 pl-5 text-lg font-medium text-white transition duration-75 ease-in-out border-t focus:outline-none focus:bg-orange-800 hover:bg-orange-800 focus:bg-opacity-25 hover:bg-opacity-25 border-gray-200' +
-          ' ' +
-          addClassName
-        }
+        className={`${addClassName} w-full text-left block py-4 pl-5 text-lg font-medium text-white transition duration-75 ease-in-out border-t focus:outline-none focus:bg-orange-800 hover:bg-orange-800 focus:bg-opacity-25 hover:bg-opacity-25 border-gray-200`}
       >
         {children}
-      </button>
+      </a>
     </Link>
   );
 };

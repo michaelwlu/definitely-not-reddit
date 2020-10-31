@@ -38,6 +38,7 @@ const CreateComment: React.FC<CreateCommentProps> = ({ postId }) => {
       initialValues={{ text: '' }}
       validationSchema={commentValidation}
       validateOnBlur={false}
+      validateOnChange={false}
       onSubmit={async (values, { resetForm }) => {
         const { errors } = await createComment({
           variables: { input: { ...values, postId } },
