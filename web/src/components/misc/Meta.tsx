@@ -11,8 +11,9 @@ export const defaultInfo = {
   desc:
     'The front page of the internet - someday | Coding project by Michael W. Lu',
   img: 'banner.png', // don't include slash
-  url: process.env.NEXT_PUBLIC_WEB_URL.replace(/\/$/, ''), // regex to remove possible slash at end
+  url: (process.env.NEXT_PUBLIC_WEB_URL || '').replace(/\/$/, ''), // regex to remove possible slash at end
   favicon: 'favicon.png',
+  apple: 'apple-touch.png',
 };
 
 const Meta: React.FC<MetaProps> = ({ title, image }) => {
@@ -36,8 +37,8 @@ const Meta: React.FC<MetaProps> = ({ title, image }) => {
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={defaultInfo.desc} />
       <link rel="canonical" href={`${defaultInfo.url}`} />
-      <link rel="icon" type="image/png" href={`${defaultInfo.img}`} />
-      <link rel="apple-touch-icon" href={`${defaultInfo.img}`} />
+      <link rel="icon" type="image/png" href={`${defaultInfo.favicon}`} />
+      <link rel="apple-touch-icon" href={`${defaultInfo.apple}`} />
       {image ? (
         <meta property="og:image" content={`${defaultInfo.url}/${image}`} />
       ) : (

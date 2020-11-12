@@ -8,7 +8,7 @@
     "build": "tsc",
     "watch": "tsc -w",
     "dev": "concurrently \"tsc -w\" \"nodemon dist/index.js\"",
-    "start": "node dist/index.js",
+    "start": "nodemon dist/index.js",
     "migrations": "typeorm migration:generate -n Setup"
   },
   "keywords": [],
@@ -28,7 +28,6 @@
     "concurrently": "^5.3.0",
     "gen-env-types": "^1.0.4",
     "nodemon": "^2.0.4",
-    "ts-node": "^9.0.0",
     "typescript": "^4.0.2"
   },
   "dependencies": {
@@ -43,11 +42,16 @@
     "express-session": "^1.17.1",
     "graphql": "^15.3.0",
     "ioredis": "^4.17.3",
+    "is-image-url": "^1.1.8",
+    "is-video": "^1.0.1",
     "link-preview-generator": "^0.0.4",
     "linkifyjs": "^2.1.9",
     "nodemailer": "^6.4.11",
-    "pg": "^8.3.0",
+    "pg": "^8.5.0",
+    "react": "^17.0.1",
+    "react-player": "^2.6.2",
     "reflect-metadata": "^0.1.13",
+    "supervisor": "^0.12.0",
     "type-graphql": "^1.0.0",
     "typeorm": "^0.2.25",
     "uuid": "^8.3.0"

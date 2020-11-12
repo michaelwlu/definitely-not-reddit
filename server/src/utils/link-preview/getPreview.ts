@@ -1,13 +1,21 @@
-import * as linkify from 'linkifyjs';
 import checkUrl from './checkUrl';
 import linkPreviewGen from './linkPreviewGen';
 import linkPreviewNet from './linkPreviewNet';
 import urlMeta from './urlMeta';
 
-const getPreview = async (text: string): Promise<string | null> => {
-  const firstLink = linkify.find(text, 'url')[0].href;
-  const isUrlValid = await checkUrl(firstLink);
-  if (!isUrlValid) return null;
+export interface LinkPreview {
+  name: string;
+  description: string;
+  domain: string;
+  image: string;
+}
+
+const getPreview = async (url: string): Promise<LinkPreview | null> => {
+  const isUrlValid = await checkUrl(url);
+  if (!isUrlValid) {
+    console.log('not valid URL');
+    return null;
+  }
 
   const errorLog = {
     linkPreviewGen: '',
@@ -16,27 +24,27 @@ const getPreview = async (text: string): Promise<string | null> => {
   };
 
   try {
-    const linkPreviewGenRes = await linkPreviewGen(firstLink);
-    // console.log('linkPreviewGenString: ' + linkPreviewGenRes);
+    const linkPreviewGenRes = await linkPreviewGen(url);
+    // console.log('linkPreviewGenString: ' + JSON.stringify(linkPreviewGenRes));
     return linkPreviewGenRes;
   } catch (error) {
     errorLog.linkPreviewGen = error;
   }
 
   try {
-    const urlMetaRes = await urlMeta(firstLink);
-    // console.log('urlMetaString: ' + urlMetaRes);
-    return urlMetaRes;
-  } catch (error) {
-    errorLog.urlMeta = error;
-  }
-
-  try {
-    const linkPreviewNetRes = await linkPreviewNet(firstLink);
-    // console.log('linkPreviewNetString: ' + linkPreviewNetRes);
+    const linkPreviewNetRes = await linkPreviewNet(url);
+    // console.log('linkPreviewNetString: ' + JSON.stringify(linkPreviewNetRes));
     return linkPreviewNetRes;
   } catch (error) {
     errorLog.linkPreviewNet = error;
+  }
+
+  try {
+    const urlMetaRes = await urlMeta(url);
+    // console.log('urlMetaString: ' + JSON.stringify(urlMetaRes));
+    return urlMetaRes;
+  } catch (error) {
+    errorLog.urlMeta = error;
   }
 
   console.log(errorLog);

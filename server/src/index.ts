@@ -11,6 +11,7 @@ import { buildSchema } from 'type-graphql';
 import { createConnection } from 'typeorm';
 import { COOKIE_NAME, __prod__ } from './constants';
 import { Comment } from './entities/Comment';
+import { Link } from './entities/Link';
 import { Post } from './entities/Post';
 import { Upvote } from './entities/Upvote';
 import { User } from './entities/User';
@@ -28,11 +29,10 @@ const main = async () => {
     logging: true,
     // synchronize: true,
     migrations: [path.join(__dirname, './migrations/*')],
-    entities: [Post, User, Upvote, Comment],
+    entities: [Post, User, Upvote, Comment, Link],
   });
   // await conn.runMigrations();
 
-  // await Post.delete({});
   const app = express();
 
   const RedisStore = connectRedis(session);

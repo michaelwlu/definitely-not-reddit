@@ -25,6 +25,7 @@ const type_graphql_1 = require("type-graphql");
 const typeorm_1 = require("typeorm");
 const constants_1 = require("./constants");
 const Comment_1 = require("./entities/Comment");
+const Link_1 = require("./entities/Link");
 const Post_1 = require("./entities/Post");
 const Upvote_1 = require("./entities/Upvote");
 const User_1 = require("./entities/User");
@@ -40,7 +41,7 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
         url: process.env.DATABASE_URL,
         logging: true,
         migrations: [path_1.default.join(__dirname, './migrations/*')],
-        entities: [Post_1.Post, User_1.User, Upvote_1.Upvote, Comment_1.Comment],
+        entities: [Post_1.Post, User_1.User, Upvote_1.Upvote, Comment_1.Comment, Link_1.Link],
     });
     const app = express_1.default();
     const RedisStore = connect_redis_1.default(express_session_1.default);

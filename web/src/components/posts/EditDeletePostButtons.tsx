@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { Router, useRouter } from 'next/router';
 import React from 'react';
 import { useDeletePostMutation, useMeQuery } from '../../generated/graphql';
 
@@ -12,7 +13,7 @@ const EditDeletePostButtons: React.FC<EditDeletePostButtonsProps> = ({
   creatorId,
 }) => {
   const { data: meData } = useMeQuery();
-
+  const router = useRouter();
   const [deletePost] = useDeletePostMutation();
 
   if (meData?.me?.id !== creatorId && meData?.me?.username !== 'admin') {
@@ -44,10 +45,11 @@ const EditDeletePostButtons: React.FC<EditDeletePostButtonsProps> = ({
             ? deletePost({
                 variables: { id },
                 update: (cache) => {
-                  cache.evict({ id: 'Post:' + id });
+                  cache.evict({ fieldName: 'posts:{}' });
                 },
               })
             : null;
+          router.push('/');
         }}
       >
         <svg

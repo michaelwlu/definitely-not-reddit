@@ -1,6 +1,7 @@
 import axios from 'axios';
+import { LinkPreview } from './getPreview';
 
-const urlMeta = async (url: string): Promise<string> => {
+const urlMeta = async (url: string): Promise<LinkPreview> => {
   const auth = `${process.env.URL_META_EMAIL}:${process.env.URL_META_KEY}`;
   const encodedAuth = Buffer.from(auth).toString('base64');
 
@@ -23,9 +24,10 @@ const urlMeta = async (url: string): Promise<string> => {
   const metaInfo = metaRes.data.meta;
 
   const metaObj = {
-    title: metaInfo.title || '',
+    name: metaInfo.title || '',
     description: metaInfo.description || '',
-    img: metaInfo.image || '',
+    image:
+      (metaInfo.image[0] === '/' ? url + metaInfo.image : metaInfo.image) || '',
     domain: new URL(url).hostname.replace('www.', ''),
   };
 
@@ -38,7 +40,7 @@ const urlMeta = async (url: string): Promise<string> => {
     }
   }
 
-  return JSON.stringify(metaObj);
+  return metaObj;
 };
 
 export default urlMeta;

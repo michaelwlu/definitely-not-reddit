@@ -5,11 +5,13 @@ fragment RegularPost on Post {
   title
   points
   text
-  textSnippet
   commentCount
   voteStatus
   creator {
     id
     username
+  }
+  link {
+    ...RegularLink
   }
 }

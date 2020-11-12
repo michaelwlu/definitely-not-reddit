@@ -4,12 +4,15 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Comment } from './Comment';
+import { Link } from './Link';
 import { Upvote } from './Upvote';
 import { User } from './User';
 
@@ -35,8 +38,10 @@ export class Post extends BaseEntity {
   @Field(() => Int, { nullable: true })
   voteStatus: number | null;
 
-  @Field(() => String, { nullable: true })
-  linkPreview: string;
+  @Field(() => Link, { nullable: true })
+  @OneToOne(() => Link)
+  @JoinColumn({ name: 'postLinkId' })
+  link?: Link;
 
   @Field()
   @Column()

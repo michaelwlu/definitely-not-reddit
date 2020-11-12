@@ -13,6 +13,7 @@ import {
   usePostQuery,
   useUpdatePostMutation,
 } from '../../../generated/graphql';
+import findLink from '../../../utils/findLink';
 import { useGetIntId } from '../../../utils/useGetIntId';
 import { postValidation } from '../../../utils/validationSchemas';
 import { withApollo } from '../../../utils/withApollo';
@@ -62,8 +63,15 @@ const EditPost: React.FC<EditPostProps> = ({}) => {
         validationSchema={postValidation}
         validateOnBlur={false}
         onSubmit={async (values) => {
+          const url = findLink(values.text);
           await updatePost({
-            variables: { id: intId, ...values },
+            variables: {
+              id: intId,
+              input: {
+                ...values,
+                ...(url && { url: url.href, linkText: url.value }),
+              },
+            },
             update: (cache) => {
               cache.evict({ id: 'Post:' + intId });
             },

@@ -11,10 +11,7 @@ interface PostSnippetProps {
 
 const PostSnippet: React.FC<PostSnippetProps> = ({ post }) => {
   return (
-    <div
-      className="flex items-start w-full py-3 pt-5 pl-3 pr-4 mx-auto bg-white border-t border-b shadow-sm sm:border sm:shadow-md sm:rounded-lg sm:py-4 sm:pl-4 sm:pr-6"
-      key={post.id}
-    >
+    <div className="flex items-start w-full py-3 pt-5 pl-3 pr-4 mx-auto bg-white border-t border-b shadow-sm sm:border sm:shadow-md sm:rounded-lg sm:py-4 sm:pl-4 sm:pr-6">
       <UpvoteSection post={post} />
       <section className="flex items-start justify-between flex-1 min-w-0 ml-3 sm:ml-5">
         <div className="flex-1 min-w-0">
@@ -27,7 +24,7 @@ const PostSnippet: React.FC<PostSnippetProps> = ({ post }) => {
           </h1>
           <PostOrigin post={post} />
           <div>
-            <PostBody text={post.text} id={post.id} isSnippet={true} />
+            <PostBody post={post} isSnippet={true} />
           </div>
           <div className="flex items-center mt-4 flex-start">
             <Link href="/post/[id]" as={`/post/${post.id}`}>

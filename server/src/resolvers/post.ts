@@ -12,13 +12,15 @@ import {
   Root,
   UseMiddleware,
 } from 'type-graphql';
-import { getConnection } from 'typeorm';
+import { getConnection, getRepository, LessThan } from 'typeorm';
+import { Comment } from '../entities/Comment';
+import { Link } from '../entities/Link';
 import { Post } from '../entities/Post';
 import { Upvote } from '../entities/Upvote';
 import { User } from '../entities/User';
-import { Comment } from '../entities/Comment';
 import { isAuth } from '../middleware/isAuth';
 import { MyContext } from '../types';
+import classifyLink from '../utils/classifyLink';
 import getPreview from '../utils/link-preview/getPreview';
 
 // Type for Post
@@ -28,6 +30,10 @@ class PostInput {
   title: string;
   @Field()
   text: string;
+  @Field(() => String, { nullable: true })
+  linkText?: string;
+  @Field(() => String, { nullable: true })
+  url?: string;
 }
 
 @ObjectType()
@@ -40,16 +46,6 @@ class PaginatedPosts {
 
 @Resolver(Post)
 export class PostResolver {
-  @FieldResolver(() => String)
-  textSnippet(@Root() post: Post) {
-    return post.text.slice(0, 200);
-  }
-
-  @FieldResolver(() => String, { nullable: true })
-  async linkPreview(@Root() post: Post) {
-    return await getPreview(post.text);
-  }
-
   @FieldResolver(() => User)
   creator(@Root() post: Post, @Ctx() { userLoader }: MyContext) {
     return userLoader.load(post.creatorId);
@@ -161,22 +157,14 @@ export class PostResolver {
     const validLimit = Math.min(50, limit);
     const validLimitPlus = validLimit + 1;
 
-    const replacements: any[] = [validLimitPlus];
-
-    if (cursor) {
-      replacements.push(new Date(Number(cursor)));
-    }
-
-    const posts = await getConnection().query(
-      `
-			SELECT p.*
-			FROM post p
-			${cursor ? `WHERE p."createdAt" < $2` : ''}
-			ORDER BY p."createdAt" DESC
-			LIMIT $1
-			`,
-      replacements
-    );
+    const posts = await getRepository(Post).find({
+      relations: ['link'],
+      order: { createdAt: 'DESC' },
+      take: validLimitPlus,
+      ...(cursor
+        ? { where: { createdAt: LessThan(new Date(Number(cursor))) } }
+        : null),
+    });
 
     return {
       posts: posts.slice(0, validLimit),
@@ -186,7 +174,7 @@ export class PostResolver {
 
   @Query(() => Post, { nullable: true })
   post(@Arg('id', () => Int) id: number): Promise<Post | undefined> {
-    return Post.findOne(id);
+    return Post.findOne(id, { relations: ['link'] });
   }
 
   @Mutation(() => Post)
@@ -195,39 +183,89 @@ export class PostResolver {
     @Arg('input') input: PostInput,
     @Ctx() { req }: MyContext
   ): Promise<Post> {
-    return Post.create({
-      ...input,
+    const { title, text, url, linkText } = input;
+
+    const post = Post.create({
+      title,
+      text,
       creatorId: req.session.userId,
-    }).save();
+    });
+
+    if (url) {
+      const type = classifyLink(url);
+      const link = Link.create({
+        url,
+        linkText,
+        type,
+        name: '',
+        description: '',
+        domain: '',
+        image: '',
+      });
+      if (type === 'website') {
+        const linkPreview = await getPreview(url);
+        Link.merge(link, { ...linkPreview });
+      }
+
+      post.link = await link.save();
+    }
+
+    return post.save();
   }
 
   @Mutation(() => Post, { nullable: true })
   @UseMiddleware(isAuth)
   async updatePost(
     @Arg('id', () => Int) id: number,
-    @Arg('title', () => String, { nullable: true }) title: string,
-    @Arg('text', () => String, { nullable: true }) text: string,
+    @Arg('input') input: PostInput,
     @Ctx() { req }: MyContext
-  ): Promise<Post | null> {
-    const post = await Post.findOne(id);
+  ): Promise<Post | undefined> {
+    const post = await Post.findOne(id, { relations: ['link'] });
     if (!post) {
-      return null;
+      return undefined;
     }
+
     if (
       post.creatorId !== req.session.userId &&
       req.session.username !== 'admin'
     ) {
       throw new Error('not authorized');
     }
-    const result = await getConnection()
-      .createQueryBuilder()
-      .update(Post)
-      .set({ title, text })
-      .where('id=:id', { id })
-      .returning('*')
-      .execute();
 
-    return result.raw[0];
+    const { title, text, url, linkText } = input;
+
+    if (url) {
+      const type = classifyLink(url);
+      const link = Link.create({
+        url,
+        linkText,
+        type,
+        name: '',
+        description: '',
+        domain: '',
+        image: '',
+      });
+      if (type === 'website') {
+        const linkPreview = await getPreview(url);
+        Link.merge(link, { ...linkPreview });
+      }
+
+      if (post.link) {
+        await Link.update({ linkId: post.link.linkId }, link);
+      } else {
+        post.link = await link.save();
+        await post.save();
+      }
+    } else {
+      if (post.link) {
+        await Post.update({ id }, { link: undefined });
+        await Link.delete({ linkId: post.link.linkId });
+      }
+    }
+
+    await Post.update({ id }, { title, text });
+
+    return Post.findOne(id, { relations: ['link'] });
   }
 
   @Mutation(() => Boolean)
@@ -236,7 +274,7 @@ export class PostResolver {
     @Arg('id', () => Int) id: number,
     @Ctx() { req }: MyContext
   ): Promise<boolean> {
-    const post = await Post.findOne(id);
+    const post = await Post.findOne(id, { relations: ['link'] });
     if (!post) {
       return false;
     }
@@ -246,8 +284,9 @@ export class PostResolver {
     ) {
       throw new Error('not authorized');
     }
-    // await Post.delete({ id, creatorId: req.session.userId });
+
     await Post.delete({ id: post.id });
+    if (post.link) await Link.delete({ linkId: post.link.linkId });
     return true;
   }
 }

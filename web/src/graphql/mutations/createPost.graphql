@@ -7,5 +7,8 @@ mutation CreatePost($input: PostInput!) {
     text
     points
     creatorId
+    link {
+      ...RegularLink
+    }
   }
 }

@@ -1,6 +1,0 @@
-query LinkPreview($id: Int!) {
-  post(id: $id) {
-    id
-    linkPreview
-  }
-}

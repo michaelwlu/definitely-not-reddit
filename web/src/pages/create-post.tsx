@@ -7,7 +7,8 @@ import InputField from '../components/misc/InputField';
 import Layout from '../components/misc/Layout';
 import Meta from '../components/misc/Meta';
 import ContentLink from '../components/posts/ContentLink';
-import { useCreatePostMutation } from '../generated/graphql';
+import { useCreatePostMutation, useVoteMutation } from '../generated/graphql';
+import findLink from '../utils/findLink';
 import { useIsAuth } from '../utils/useIsAuth';
 import { postValidation } from '../utils/validationSchemas';
 import { withApollo } from '../utils/withApollo';
@@ -17,6 +18,7 @@ const CreatePost: React.FC<{}> = ({}) => {
 
   useIsAuth();
   const [createPost] = useCreatePostMutation();
+  const [vote] = useVoteMutation();
 
   return (
     <Layout variant="small">
@@ -27,15 +29,29 @@ const CreatePost: React.FC<{}> = ({}) => {
         validationSchema={postValidation}
         validateOnBlur={false}
         onSubmit={async (values) => {
+          const url = findLink(values.text);
+
           const { data, errors } = await createPost({
-            variables: { input: values },
+            variables: {
+              input: {
+                ...values,
+                ...(url && { url: url.href, linkText: url.value }),
+              },
+            },
             update: (cache) => {
               cache.evict({ fieldName: 'posts:{}' });
             },
           });
           if (!errors) {
+            if (data?.createPost.id) {
+              await vote({
+                variables: {
+                  postId: data?.createPost.id,
+                  input: 1,
+                },
+              });
+            }
             await router.push(`/post/${data?.createPost.id}`);
-            window.scrollTo(0, 0);
           }
         }}
       >

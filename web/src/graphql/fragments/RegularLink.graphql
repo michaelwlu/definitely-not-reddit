@@ -1,0 +1,12 @@
+fragment RegularLink on Link {
+  linkId
+  linkText
+  url
+  type
+  name
+  domain
+  description
+  image
+  createdAt
+  updatedAt
+}

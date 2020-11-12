@@ -13,7 +13,7 @@ interface UpvoteSectionProps {
   post: RegularPostFragment;
 }
 
-const updateAfterVote = (
+export const updateAfterVote = (
   input: number,
   postId: number,
   cache: ApolloCache<VoteMutation>

@@ -5,6 +5,7 @@ import React, { useState } from 'react';
 import { useLogoutMutation, useMeQuery } from '../../generated/graphql';
 import { isServer } from '../../utils/isServer';
 import LoadingSpinner from '../misc/LoadingSpinner';
+import UsernameIcon from '../misc/UsernameIcon';
 import MobileNavLink from './MobileNavLink';
 import NavLink from './NavLink';
 
@@ -50,9 +51,7 @@ const NavBar: React.FC<NavBarProps> = ({}) => {
   } else {
     rightNav = (
       <>
-        <div className="flex items-center justify-center flex-shrink-0 mr-3 text-base font-medium text-white bg-gray-400 rounded-full w-9 h-9">
-          {data.me.username[0].toUpperCase()}
-        </div>
+        <UsernameIcon username={data.me.username} />
         <Link href="/create-post">
           <button className="flex items-center justify-center px-2.5 py-1.5 font-semibold leading-6 text-gray-600 whitespace-no-wrap transition duration-200 ease-in-out border-2 border-gray-100 bg-gray-100 rounded-lg text-sm focus:outline-none hover:bg-white hover:text-teal-500 hover:border-white focus:bg-white focus:text-teal-500 focus:border-white focus:shadow-outline-orange">
             create post
@@ -92,7 +91,7 @@ const NavBar: React.FC<NavBarProps> = ({}) => {
 
   return (
     // Nav background
-    <nav className="relative z-10 w-full shadow-sm sm:shadow-md bg-nav">
+    <nav className="relative z-10 w-full shadow-sm sm:shadow-md bg-gradient-to-b from-nav to-orange-400">
       {/* Nav container */}
       <div className="max-w-4xl pl-3 pr-3 mx-auto sm:px-4">
         <div className="flex items-center justify-between h-20">
@@ -133,11 +132,7 @@ const NavBar: React.FC<NavBarProps> = ({}) => {
           </div>
           {/* Mobile menu button */}
           <div className="flex items-center space-x-2 sm:hidden">
-            {data?.me ? (
-              <div className="flex items-center justify-center flex-shrink-0 text-base font-medium text-white bg-gray-400 rounded-full w-9 h-9">
-                {data.me.username[0].toUpperCase()}
-              </div>
-            ) : null}
+            {data?.me ? <UsernameIcon username={data.me.username} /> : null}
             <button
               onClick={() => setDropdown(!dropdown)}
               className={`inline-flex p-1 text-white rounded-md focus:outline-none focus:bg-opacity-25 ${

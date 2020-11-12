@@ -1,5 +1,0 @@
-fragment PostSnippet on Post {
-  ...RegularPost
-  textSnippet
-  text
-}

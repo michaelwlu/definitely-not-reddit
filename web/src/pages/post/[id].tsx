@@ -30,7 +30,7 @@ const Post: React.FC<PostProps> = ({}) => {
     return (
       <Layout>
         <Meta />
-        <div className="flex justify-center">
+        <div className="flex items-center justify-center text-gray-700 h-52">
           <LoadingSpinner />
         </div>
       </Layout>
@@ -74,7 +74,7 @@ const Post: React.FC<PostProps> = ({}) => {
           <PostOrigin post={data.post} />
           <div className="mt-6">
             {data.post.text ? (
-              <PostBody text={data.post.text} id={intId} />
+              <PostBody post={data.post} isSnippet={false} />
             ) : null}
           </div>
         </div>

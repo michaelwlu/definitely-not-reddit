@@ -13,6 +13,7 @@ exports.Post = void 0;
 const type_graphql_1 = require("type-graphql");
 const typeorm_1 = require("typeorm");
 const Comment_1 = require("./Comment");
+const Link_1 = require("./Link");
 const Upvote_1 = require("./Upvote");
 const User_1 = require("./User");
 let Post = class Post extends typeorm_1.BaseEntity {
@@ -42,9 +43,11 @@ __decorate([
     __metadata("design:type", Object)
 ], Post.prototype, "voteStatus", void 0);
 __decorate([
-    type_graphql_1.Field(() => String, { nullable: true }),
-    __metadata("design:type", String)
-], Post.prototype, "linkPreview", void 0);
+    type_graphql_1.Field(() => Link_1.Link, { nullable: true }),
+    typeorm_1.OneToOne(() => Link_1.Link),
+    typeorm_1.JoinColumn({ name: 'postLinkId' }),
+    __metadata("design:type", Link_1.Link)
+], Post.prototype, "link", void 0);
 __decorate([
     type_graphql_1.Field(),
     typeorm_1.Column(),

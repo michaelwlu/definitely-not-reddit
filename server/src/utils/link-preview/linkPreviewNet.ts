@@ -1,6 +1,7 @@
 import axios from 'axios';
+import { LinkPreview } from './getPreview';
 
-const linkPreviewNet = async (url: string): Promise<string> => {
+const linkPreviewNet = async (url: string): Promise<LinkPreview> => {
   const config = {
     data: {
       key: process.env.LINK_PREVIEW_KEY,
@@ -20,13 +21,13 @@ const linkPreviewNet = async (url: string): Promise<string> => {
   const { title, description, image, url: domain } = linkPreviewNetRes.data;
 
   const linkPreviewNetObj = {
-    title: title || '',
+    name: title || '',
     description: description || '',
     image: image || '',
     domain: domain ? new URL(domain).hostname.replace('www.', '') : '',
   };
 
-  return JSON.stringify(linkPreviewNetObj);
+  return linkPreviewNetObj;
 };
 
 export default linkPreviewNet;

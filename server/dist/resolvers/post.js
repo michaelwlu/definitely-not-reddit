@@ -27,11 +27,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PostResolver = void 0;
 const type_graphql_1 = require("type-graphql");
 const typeorm_1 = require("typeorm");
+const Comment_1 = require("../entities/Comment");
+const Link_1 = require("../entities/Link");
 const Post_1 = require("../entities/Post");
 const Upvote_1 = require("../entities/Upvote");
 const User_1 = require("../entities/User");
-const Comment_1 = require("../entities/Comment");
 const isAuth_1 = require("../middleware/isAuth");
+const classifyLink_1 = __importDefault(require("../utils/classifyLink"));
 const getPreview_1 = __importDefault(require("../utils/link-preview/getPreview"));
 let PostInput = class PostInput {
 };
@@ -43,6 +45,14 @@ __decorate([
     type_graphql_1.Field(),
     __metadata("design:type", String)
 ], PostInput.prototype, "text", void 0);
+__decorate([
+    type_graphql_1.Field(() => String, { nullable: true }),
+    __metadata("design:type", String)
+], PostInput.prototype, "linkText", void 0);
+__decorate([
+    type_graphql_1.Field(() => String, { nullable: true }),
+    __metadata("design:type", String)
+], PostInput.prototype, "url", void 0);
 PostInput = __decorate([
     type_graphql_1.InputType()
 ], PostInput);
@@ -60,14 +70,6 @@ PaginatedPosts = __decorate([
     type_graphql_1.ObjectType()
 ], PaginatedPosts);
 let PostResolver = class PostResolver {
-    textSnippet(post) {
-        return post.text.slice(0, 200);
-    }
-    linkPreview(post) {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield getPreview_1.default(post.text);
-        });
-    }
     creator(post, { userLoader }) {
         return userLoader.load(post.creatorId);
     }
@@ -138,17 +140,9 @@ let PostResolver = class PostResolver {
         return __awaiter(this, void 0, void 0, function* () {
             const validLimit = Math.min(50, limit);
             const validLimitPlus = validLimit + 1;
-            const replacements = [validLimitPlus];
-            if (cursor) {
-                replacements.push(new Date(Number(cursor)));
-            }
-            const posts = yield typeorm_1.getConnection().query(`
-			SELECT p.*
-			FROM post p
-			${cursor ? `WHERE p."createdAt" < $2` : ''}
-			ORDER BY p."createdAt" DESC
-			LIMIT $1
-			`, replacements);
+            const posts = yield typeorm_1.getRepository(Post_1.Post).find(Object.assign({ relations: ['link'], order: { createdAt: 'DESC' }, take: validLimitPlus }, (cursor
+                ? { where: { createdAt: typeorm_1.LessThan(new Date(Number(cursor))) } }
+                : null)));
             return {
                 posts: posts.slice(0, validLimit),
                 hasMore: posts.length === validLimitPlus,
@@ -156,36 +150,83 @@ let PostResolver = class PostResolver {
         });
     }
     post(id) {
-        return Post_1.Post.findOne(id);
+        return Post_1.Post.findOne(id, { relations: ['link'] });
     }
     createPost(input, { req }) {
         return __awaiter(this, void 0, void 0, function* () {
-            return Post_1.Post.create(Object.assign(Object.assign({}, input), { creatorId: req.session.userId })).save();
+            const { title, text, url, linkText } = input;
+            const post = Post_1.Post.create({
+                title,
+                text,
+                creatorId: req.session.userId,
+            });
+            if (url) {
+                const type = classifyLink_1.default(url);
+                const link = Link_1.Link.create({
+                    url,
+                    linkText,
+                    type,
+                    name: '',
+                    description: '',
+                    domain: '',
+                    image: '',
+                });
+                if (type === 'website') {
+                    const linkPreview = yield getPreview_1.default(url);
+                    Link_1.Link.merge(link, Object.assign({}, linkPreview));
+                }
+                post.link = yield link.save();
+            }
+            return post.save();
         });
     }
-    updatePost(id, title, text, { req }) {
+    updatePost(id, input, { req }) {
         return __awaiter(this, void 0, void 0, function* () {
-            const post = yield Post_1.Post.findOne(id);
+            const post = yield Post_1.Post.findOne(id, { relations: ['link'] });
             if (!post) {
-                return null;
+                return undefined;
             }
             if (post.creatorId !== req.session.userId &&
                 req.session.username !== 'admin') {
                 throw new Error('not authorized');
             }
-            const result = yield typeorm_1.getConnection()
-                .createQueryBuilder()
-                .update(Post_1.Post)
-                .set({ title, text })
-                .where('id=:id', { id })
-                .returning('*')
-                .execute();
-            return result.raw[0];
+            const { title, text, url, linkText } = input;
+            if (url) {
+                const type = classifyLink_1.default(url);
+                const link = Link_1.Link.create({
+                    url,
+                    linkText,
+                    type,
+                    name: '',
+                    description: '',
+                    domain: '',
+                    image: '',
+                });
+                if (type === 'website') {
+                    const linkPreview = yield getPreview_1.default(url);
+                    Link_1.Link.merge(link, Object.assign({}, linkPreview));
+                }
+                if (post.link) {
+                    yield Link_1.Link.update({ linkId: post.link.linkId }, link);
+                }
+                else {
+                    post.link = yield link.save();
+                    yield post.save();
+                }
+            }
+            else {
+                if (post.link) {
+                    yield Post_1.Post.update({ id }, { link: undefined });
+                    yield Link_1.Link.delete({ linkId: post.link.linkId });
+                }
+            }
+            yield Post_1.Post.update({ id }, { title, text });
+            return Post_1.Post.findOne(id, { relations: ['link'] });
         });
     }
     deletePost(id, { req }) {
         return __awaiter(this, void 0, void 0, function* () {
-            const post = yield Post_1.Post.findOne(id);
+            const post = yield Post_1.Post.findOne(id, { relations: ['link'] });
             if (!post) {
                 return false;
             }
@@ -194,24 +235,12 @@ let PostResolver = class PostResolver {
                 throw new Error('not authorized');
             }
             yield Post_1.Post.delete({ id: post.id });
+            if (post.link)
+                yield Link_1.Link.delete({ linkId: post.link.linkId });
             return true;
         });
     }
 };
-__decorate([
-    type_graphql_1.FieldResolver(() => String),
-    __param(0, type_graphql_1.Root()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Post_1.Post]),
-    __metadata("design:returntype", void 0)
-], PostResolver.prototype, "textSnippet", null);
-__decorate([
-    type_graphql_1.FieldResolver(() => String, { nullable: true }),
-    __param(0, type_graphql_1.Root()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Post_1.Post]),
-    __metadata("design:returntype", Promise)
-], PostResolver.prototype, "linkPreview", null);
 __decorate([
     type_graphql_1.FieldResolver(() => User_1.User),
     __param(0, type_graphql_1.Root()), __param(1, type_graphql_1.Ctx()),
@@ -272,11 +301,10 @@ __decorate([
     type_graphql_1.Mutation(() => Post_1.Post, { nullable: true }),
     type_graphql_1.UseMiddleware(isAuth_1.isAuth),
     __param(0, type_graphql_1.Arg('id', () => type_graphql_1.Int)),
-    __param(1, type_graphql_1.Arg('title', () => String, { nullable: true })),
-    __param(2, type_graphql_1.Arg('text', () => String, { nullable: true })),
-    __param(3, type_graphql_1.Ctx()),
+    __param(1, type_graphql_1.Arg('input')),
+    __param(2, type_graphql_1.Ctx()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, String, String, Object]),
+    __metadata("design:paramtypes", [Number, PostInput, Object]),
     __metadata("design:returntype", Promise)
 ], PostResolver.prototype, "updatePost", null);
 __decorate([

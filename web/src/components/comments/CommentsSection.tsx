@@ -65,7 +65,7 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
       </div>
       <div className="my-8">
         {data.postComments.map((c) => (
-          <SingleComment key={c.id} comment={c} creatorId={postCreatorId} />
+          <SingleComment key={c.id} comment={c} postCreatorId={postCreatorId} />
         ))}
       </div>
     </EditContext.Provider>
