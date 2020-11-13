@@ -1,4 +1,4 @@
-![Definitely Not Reddit](https://i.imgur.com/OPUOHIA.png)
+<img src="./readme/banner-thin.png" alt="Definitely Not Reddit">
 
 # Definitely Not Reddit
 
@@ -10,23 +10,19 @@ Visit: [definitelynotreddit.michaelwenlu.com](https://definitelynotreddit.michae
 
 This is my Reddit clone coding project that began with Ben Awad's epic [14-hour YouTube tutorial](https://youtu.be/I6ypD7qv3Z8) and evolved with more functionalities over time. It allows users to create posts, upvote/downvote, and comment, and it supports text and content (image, video, links) posts.
 
----
-
 ## Demo
 
 #### Sign Up
 
-![Sign Up](https://i.imgur.com/8Lep3JZ.gif)
+<img src="./readme/sign-up.gif?raw=true" width="500px" alt="Sign Up">
 
 #### Create Post
 
-![Create Post](https://i.imgur.com/fTRePj7.gif)
+<img src="./readme/create-post.gif?raw=true" width="500px" alt="Create Post">
 
 #### Leave Comment
 
-![Leave Comment](https://i.imgur.com/IYqzkIG.gif)
-
----
+<img src="./readme/leave-comment.gif?raw=true" width="500px" alt="Leave Comment">
 
 ## Version
 
@@ -39,8 +35,6 @@ v1.2 Add comments functionality
 v1.1 Redesign with responsive layouts
 
 v1.0 Deploy site with base functionality (user accounts, text posts)
-
----
 
 ## Technologies
 
@@ -74,8 +68,6 @@ v1.0 Deploy site with base functionality (user accounts, text posts)
 - [DigitalOcean](https://www.digitalocean.com/)
 - [Docker](https://www.docker.com/) / [Dokku](http://dokku.viewdocs.io/dokku/)
 
----
-
 ## Development Challenges
 
 #### Link Preview Generation
@@ -101,8 +93,6 @@ Upon the next deployment, everything went bonkers. The web component crashed imm
 After much headache, I realized that the problem was the self-scraping loop caused by the post I made. As the front end was being deployed, Next.js's server-side rendering would attempt to retrieve the very meta data of the site still being deployed. This would cause runaway processes on the back end as scraping repeatedly failed. The result was a total system meltdown.
 
 My solution was to add a loophole on the front end, where a link preview request of the site itself would be intercepted and redirected to the readily available meta tags in the website code. Eventually, this patch was rendered unnecessary by the process refactoring, but it was—suffice it to say—a memorable and challenging problem to overcome.
-
----
 
 ## License
 
