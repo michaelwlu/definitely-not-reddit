@@ -14,17 +14,17 @@ This is my Reddit clone coding project that began with Ben Awad's epic [14-hour 
 
 #### Sign Up
 
-<img src="./readme/sign-up.gif?raw=true" width="500px" alt="Sign Up">
+<img src="./readme/sign-up.gif?raw=true" width="600px" alt="Sign Up">
 
 #### Create Post
 
-<img src="./readme/create-post.gif?raw=true" width="500px" alt="Create Post">
+<img src="./readme/create-post.gif?raw=true" width="600px" alt="Create Post">
 
 #### Leave Comment
 
-<img src="./readme/leave-comment.gif?raw=true" width="500px" alt="Leave Comment">
+<img src="./readme/leave-comment.gif?raw=true" width="600px" alt="Leave Comment">
 
-## Version
+## Versions
 
 v1.4 Refactor application for link data storage
 
@@ -74,7 +74,7 @@ v1.0 Deploy site with base functionality (user accounts, text posts)
 
 This was a doozy of a process. I had wanted to add support for content posts in order to expand the usability of the site and allow users to embed images, gifs, videos, and links in their posts.
 
-For the first three items, the process was simple enough: URLs within the post body would be parsed and categorized, then rendered accordingly as an image or video tag or handled by [React Player](https://www.npmjs.com/package/react-player), which supports YouTube, Vimeo, Twitch, etc.
+For the first three items, the process was simple enough: URLs within the post body would be parsed and categorized, then rendered accordingly as an image or video tag or handled by [ReactPlayer](https://www.npmjs.com/package/react-player), which supports YouTube, Vimeo, Twitch, etc.
 
 As for web page links, my intention was to display a card preview, similar to the format on Facebook and Twitter feeds. This required obtaining meta tags data. The first method I found was a package called [link-preview-generator](https://www.npmjs.com/package/link-preview-generator). Because it uses Puppeteer to scrape said page, the implementation had to be server-side.
 
