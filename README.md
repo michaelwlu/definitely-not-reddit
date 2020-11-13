@@ -2,7 +2,7 @@
 
 # Definitely Not Reddit
 
-Visit: [definitelynotreddit.michaelwenlu.com](https://definitelynotreddit.michaelwenlu.com)
+Visit at: [definitelynotreddit.michaelwenlu.com](https://definitelynotreddit.michaelwenlu.com)
 
 ---
 
@@ -12,15 +12,15 @@ This is my Reddit clone coding project that began with Ben Awad's epic [14-hour 
 
 ## Demo
 
-#### Sign Up
+### Sign Up
 
 <img src="./readme/sign-up.gif?raw=true" width="600px" alt="Sign Up">
 
-#### Create Post
+### Create Post
 
 <img src="./readme/create-post.gif?raw=true" width="600px" alt="Create Post">
 
-#### Leave Comment
+### Leave Comment
 
 <img src="./readme/leave-comment.gif?raw=true" width="600px" alt="Leave Comment">
 
@@ -72,27 +72,27 @@ v1.0 Deploy site with base functionality (user accounts, text posts)
 
 #### Link Preview Generation
 
-This was a doozy of a process. I had wanted to add support for content posts in order to expand the usability of the site and allow users to embed images, gifs, videos, and links in their posts.
+This roller coaster began when I had the idea to add support for content posts in order to expand the usability of the site and allow users to embed images, gifs, videos, and links in their posts.
 
-For the first three items, the process was simple enough: URLs within the post body would be parsed and categorized, then rendered accordingly as an image or video tag or handled by [ReactPlayer](https://www.npmjs.com/package/react-player), which supports YouTube, Vimeo, Twitch, etc.
+For the first three items, the process was simple enough: URLs within the post body would be parsed and categorized, then rendered accordingly as an image/video tag or handled by [ReactPlayer](https://www.npmjs.com/package/react-player), which supports YouTube, Vimeo, Twitch, etc.
 
-As for web page links, my intention was to display a card preview, similar to the format on Facebook and Twitter feeds. This required obtaining meta tags data. The first method I found was a package called [link-preview-generator](https://www.npmjs.com/package/link-preview-generator). Because it uses Puppeteer to scrape said page, the implementation had to be server-side.
+As for web page links, my goal was to display a card preview, similar to the format on Facebook and Twitter social feeds. This required obtaining the page's meta tag data. The first method I found was a package called [link-preview-generator](https://www.npmjs.com/package/link-preview-generator). Because it uses Puppeteer to scrape said page, the implementation had to be server-side.
 
-In retrospect, it was an obvious mistake to place the meta data retrieval process at time of post read instead of post creation. I wanted to avoid refactoring the database to store link information, relying instead on live scraping everytime a user accessed the site. Always having up-to-date meta information is cool, but the modest server resources made this design absolutely unsustainable. Server load frequently throttled, and repeated scraping was sometimes detected and blocked by website defenses.
+In retrospect, it was a glaring mistake to position the meta data retrieval process at time of post read instead of post creation. I had wanted to avoid refactoring the database to store link information, relying instead on live scraping everytime a user accessed the site. Always having up-to-date meta information is nice, but the modest server resources made this design absolutely unsustainable. Server load frequently throttled, and repeated scraping was sometimes detected and blocked by website defenses.
 
 Several other issues arose, including configuring Puppeteer to run properly inside a Docker container. While debugging this, I experimented with two other meta data services ([URL Meta](https://urlmeta.org/) and [LinkPreview](https://www.linkpreview.net/)) and ultimately added them as backup processes for redundancy.
 
-Eventually, I bit the bullet and refactored the database and the link preview generation procedure to retrieve and store meta data at time of post creation, though not before encountering another bewildering problem.
+Eventually, I bit the bullet and refactored the database and link preview component to retrieve and store meta data at time of post creation, though not before encountering another bewildering problem.
 
 #### Self-Scraping Loop
 
-When I had successfully gotten Puppeteer to work, I deployed the site and created a post announcing the new features and demoing the link preview functionality. In that post, the site I featured was Definitely Not Reddit itself.
+When I had successfully gotten Puppeteer to work, I deployed the site and created a post announcing the new features and demoing the link preview functionality. In that post, the site I linked was Definitely Not Reddit itself.
 
 Upon the next deployment, everything went bonkers. The web component crashed immediately and error logs showed recurring and unhandled GET requests. The server virtual machine spiked to maximum CPU and memory utilization and locked up with runtime errors.
 
-After much headache, I realized that the problem was the self-scraping loop caused by the post I made. As the front end was being deployed, Next.js's server-side rendering would attempt to retrieve the very meta data of the site still being deployed. This would cause runaway processes on the back end as scraping repeatedly failed. The result was a total system meltdown.
+After a lot of troubleshooting, I realized that the problem was the self-scraping loop caused by the post I made. As the front end was being deployed, Next.js's server-side rendering would attempt to retrieve the very meta data of the site still being deployed. This would cause runaway processes on the back end as scraping repeatedly failed. The result was a total system meltdown.
 
-My solution was to add a loophole on the front end, where a link preview request of the site itself would be intercepted and redirected to the readily available meta tags in the website code. Eventually, this patch was rendered unnecessary by the process refactoring, but it was—suffice it to say—a memorable and challenging problem to overcome.
+My solution at the time was to add a loophole on the front end, where a link preview request of the site itself would be intercepted and redirected to the readily available meta tags in the website code. Eventually, this patch was rendered unnecessary by a redesign of the whole process, but it was—suffice it to say—a memorable and challenging puzzle.
 
 ## License
 
