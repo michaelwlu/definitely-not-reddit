@@ -70,57 +70,6 @@ const LinkPreview: React.FC<LinkPreviewProps> = ({
       </div>
     </a>
   );
-
-  // const siteUrlCore = new URL(process.env.NEXT_PUBLIC_WEB_URL).hostname;
-  // const hrefUrlCore = new URL(href).hostname;
-
-  // if (siteUrlCore === hrefUrlCore) {
-  //   return body({
-  //     title: defaultInfo.site,
-  //     description: defaultInfo.desc,
-  //     domain: siteUrlCore.replace('www.', ''),
-  //     img: `${defaultInfo.url}/${defaultInfo.img}`,
-  //   });
-  // }
-
-  //  if (loading) {
-  //   return (
-  //     <div
-  //       className={`${
-  //         isSnippet ? 'h-64 sm:h-36' : 'sm:h-48'
-  //       } animate-pulse flex flex-col justify-end max-w-full overflow-hidden border border-gray-200 rounded-lg shadow-sm sm:flex-row`}
-  //     >
-  //       <div
-  //         className={`${
-  //           isSnippet ? 'h-full max-h-44 sm:w-1/4' : 'h-52 sm:w-1/3'
-  //         } bg-gray-200 flex-shrink flex w-full sm:h-full`}
-  //       ></div>
-  //       <div
-  //         className={`${
-  //           isSnippet ? 'sm:w-3/4' : 'sm:w-2/3'
-  //         } flex flex-col justify-center flex-shrink-0 w-full h-auto px-4 py-4 overflow-hidden bg-white border-t border-gray-200 sm:px-6 sm:h-full sm:border-l sm:border-t-0`}
-  //       >
-  //         <TextBlock rows={3} color="#e5e7eb" />
-  //       </div>
-  //     </div>
-  //   );
-  // }
-
-  // const errorDisplay = (
-  //   <div className="text-sm italic text-gray-400">{`< No link preview available >`}</div>
-  // );
-
-  // if (error) {
-  //   return errorDisplay;
-  // }
-
-  // if (!data?.post?.linkPreview) {
-  //   return errorDisplay;
-  // }
-
-  // const linkPreviewObj = JSON.parse(data.post.linkPreview);
-
-  // return body(linkPreviewObj);
 };
 
 export default LinkPreview;

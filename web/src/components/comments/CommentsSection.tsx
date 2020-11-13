@@ -27,18 +27,18 @@ const CommentsSection: React.FC<CommentsSectionProps> = ({
 
   if (loading) {
     return (
-      <div className="flex justify-center">
+      <div className="flex justify-center mt-14">
         <LoadingSpinner />
       </div>
     );
   }
 
   if (error) {
-    return <div className="text-center">{error.message}</div>;
+    return <div className="text-center mt-14">{error.message}</div>;
   }
 
   if (!data?.postComments) {
-    return <div className="text-center">Could not find comments</div>;
+    return <div className="text-center mt-14">Could not find comments</div>;
   }
   return (
     <EditContext.Provider value={{ sectionEdit, setSectionEdit }}>

@@ -26,7 +26,7 @@ const PostBody: React.FC<PostBodyProps> = ({ post, isSnippet = false }) => {
   }
 
   // destructure link elements
-  const { linkText, url, type, name, description, domain, image } = link;
+  const { linkText, url, type } = link;
 
   // compare text with value and href to determine if text is just a link
   const isOnlyLink = linkText === text || url === text;
