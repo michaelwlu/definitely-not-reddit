@@ -1,16 +1,16 @@
 <img src="./readme/banner-thin.png" alt="Banner">
 
-<h1 align="center">Definitely Not Reddit</h1>
+# Definitely Not Reddit
 
-<p align="center">Visit at: <a href="https://definitelynotreddit.michaelwenlu.com">definitelynotreddit.michaelwenlu.com</a></p>
-
-<img src="./readme/screenshot.png" alt="Screenshot">
+Visit at: [definitelynotreddit.michaelwenlu.com](https://definitelynotreddit.michaelwenlu.com)
 
 ---
 
 ## 📝 Description
 
 This is my Reddit clone coding project that began with Ben Awad's epic [14-hour YouTube tutorial](https://youtu.be/I6ypD7qv3Z8) and evolved with more functionalities over time. It allows users to create posts, upvote/downvote, and comment, and it supports text and content (image, video, links) posts.
+
+<img src="./readme/screenshot.png" width="600px" alt="Screenshot">
 
 ## 🎬 Demo
 
