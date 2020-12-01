@@ -97,18 +97,18 @@ const PostBody: React.FC<PostBodyProps> = ({ post, isSnippet = false }) => {
 
     case 'video':
       body = (
-        <>
-          <div className="block sm:hidden">
-            <video controls muted className="max-w-full max-h-96">
-              <source src={url} />
-            </video>
-          </div>
-          <div className="hidden sm:block">
-            <video controls autoPlay muted className="max-w-full max-h-96">
-              <source src={url} />
-            </video>
-          </div>
-        </>
+        <div className="block">
+          <video
+            controls
+            muted
+            autoPlay
+            loop
+            playsInline
+            className="max-w-full max-h-96"
+          >
+            <source src={url} />
+          </video>
+        </div>
       );
       break;
 

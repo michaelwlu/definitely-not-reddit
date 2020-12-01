@@ -41,7 +41,9 @@ const EditDeletePostButtons: React.FC<EditDeletePostButtonsProps> = ({
         className="p-1 text-gray-400 transition duration-150 ease-in-out bg-gray-200 border border-transparent rounded-lg focus:outline-none hover:bg-gray-300 focus:bg-gray-300 active:bg-gray-300 hover:text-gray-600"
         aria-label="Delete Post"
         onClick={() => {
-          confirm('Are you sure you would like to delete this post?')
+          let deleteSuccess = confirm(
+            'Are you sure you would like to delete this post?'
+          )
             ? deletePost({
                 variables: { id },
                 update: (cache) => {
@@ -49,7 +51,7 @@ const EditDeletePostButtons: React.FC<EditDeletePostButtonsProps> = ({
                 },
               })
             : null;
-          router.push('/');
+          if (deleteSuccess) router.push('/');
         }}
       >
         <svg

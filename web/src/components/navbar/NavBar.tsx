@@ -62,7 +62,8 @@ const NavBar: React.FC<NavBarProps> = ({}) => {
             await logout();
             await apolloClient.clearStore();
             await router.push('/');
-            router.reload();
+            scroll(0, 0);
+            // router.reload();
           }}
           href=""
         >
@@ -79,7 +80,8 @@ const NavBar: React.FC<NavBarProps> = ({}) => {
             await logout();
             await apolloClient.clearStore();
             await router.push('/');
-            router.reload();
+            scroll(0, 0);
+            // router.reload();
           }}
           href=""
         >

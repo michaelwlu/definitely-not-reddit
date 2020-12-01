@@ -1,16 +1,18 @@
-<img src="./readme/banner-thin.png" alt="Definitely Not Reddit">
+<img src="./readme/banner-thin.png" alt="Banner">
 
-# Definitely Not Reddit
+<h1 align="center">Definitely Not Reddit</h1>
 
-Visit at: [definitelynotreddit.michaelwenlu.com](https://definitelynotreddit.michaelwenlu.com)
+<p align="center">Visit at: <a href="https://definitelynotreddit.michaelwenlu.com">definitelynotreddit.michaelwenlu.com</a></p>
+
+<img src="./readme/screenshot.png" alt="Screenshot">
 
 ---
 
-## Description
+## 📝 Description
 
 This is my Reddit clone coding project that began with Ben Awad's epic [14-hour YouTube tutorial](https://youtu.be/I6ypD7qv3Z8) and evolved with more functionalities over time. It allows users to create posts, upvote/downvote, and comment, and it supports text and content (image, video, links) posts.
 
-## Demo
+## 🎬 Demo
 
 ### Sign Up
 
@@ -24,7 +26,7 @@ This is my Reddit clone coding project that began with Ben Awad's epic [14-hour 
 
 <img src="./readme/leave-comment.gif?raw=true" width="600px" alt="Leave Comment">
 
-## Versions
+## 🤖 Versions
 
 v1.4 Refactor application for link data storage
 
@@ -36,7 +38,7 @@ v1.1 Redesign with responsive layouts
 
 v1.0 Deploy site with base functionality (user accounts, text posts)
 
-## Technologies
+## 🚀 Technologies
 
 **General**
 
@@ -68,7 +70,7 @@ v1.0 Deploy site with base functionality (user accounts, text posts)
 - [DigitalOcean](https://www.digitalocean.com/)
 - [Docker](https://www.docker.com/) / [Dokku](http://dokku.viewdocs.io/dokku/)
 
-## Development Challenges
+## 🧗 Development Challenges
 
 #### Link Preview Generation
 
@@ -94,6 +96,6 @@ After a lot of troubleshooting, I realized that the problem was the self-scrapin
 
 My solution at the time was to add a loophole on the front end, where a link preview request of the site itself would be intercepted and redirected to the readily available meta tags in the website code. Eventually, this patch was rendered unnecessary by a redesign of the whole process, but it was—suffice it to say—a memorable and challenging puzzle.
 
-## License
+## ©️ License
 
 MIT © 2020 Michael W. Lu
