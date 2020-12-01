@@ -1,4 +1,4 @@
-<img src="./readme/banner-thin.png" alt="Banner">
+<img src="./readme/banner.png" alt="Banner">
 
 # Definitely Not Reddit
 
@@ -96,6 +96,6 @@ After a lot of troubleshooting, I realized that the problem was the self-scrapin
 
 My solution at the time was to add a loophole on the front end, where a link preview request of the site itself would be intercepted and redirected to the readily available meta tags in the website code. Eventually, this patch was rendered unnecessary by a redesign of the whole process, but it was—suffice it to say—a memorable and challenging puzzle.
 
-## ©️ License
+## 🗃️ License
 
 MIT © 2020 Michael W. Lu
