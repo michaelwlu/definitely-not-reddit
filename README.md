@@ -2,7 +2,7 @@
 
 # Definitely Not Reddit
 
-Visit at: [definitelynotreddit.michaelwenlu.com](https://definitelynotreddit.michaelwenlu.com)
+Visit at: [definitelynotreddit.com](https://definitelynotreddit.com)
 
 ---
 
