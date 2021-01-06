@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.createUserLoader = void 0;
 const dataloader_1 = __importDefault(require("dataloader"));
 const User_1 = require("../entities/User");
-exports.createUserLoader = () => new dataloader_1.default((userIds) => __awaiter(void 0, void 0, void 0, function* () {
+const createUserLoader = () => new dataloader_1.default((userIds) => __awaiter(void 0, void 0, void 0, function* () {
     const users = yield User_1.User.findByIds(userIds);
     const userIdToUser = {};
     users.forEach((u) => {
@@ -24,4 +24,5 @@ exports.createUserLoader = () => new dataloader_1.default((userIds) => __awaiter
     const sortedUsers = userIds.map((userId) => userIdToUser[userId]);
     return sortedUsers;
 }));
+exports.createUserLoader = createUserLoader;
 //# sourceMappingURL=createUserLoader.js.map

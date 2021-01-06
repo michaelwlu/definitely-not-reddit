@@ -62,7 +62,9 @@ const main = () => __awaiter(void 0, void 0, void 0, function* () {
             httpOnly: true,
             sameSite: 'lax',
             secure: constants_1.__prod__,
-            domain: constants_1.__prod__ ? '.michaelwenlu.com' : undefined,
+            domain: constants_1.__prod__
+                ? String(process.env.CORS_ORIGIN).replace('https://', '.')
+                : undefined,
         },
         saveUninitialized: false,
         secret: process.env.SESSION_SECRET,
