@@ -60,7 +60,7 @@ const NavBar: React.FC<NavBarProps> = ({}) => {
         <NavLink
           onClick={async () => {
             await logout();
-            await apolloClient.clearStore();
+            await apolloClient.resetStore();
             await router.push('/');
             scroll(0, 0);
             // router.reload();
@@ -78,7 +78,7 @@ const NavBar: React.FC<NavBarProps> = ({}) => {
           onClick={async () => {
             setDropdown(!dropdown);
             await logout();
-            await apolloClient.clearStore();
+            await apolloClient.resetStore();
             await router.push('/');
             scroll(0, 0);
             // router.reload();
