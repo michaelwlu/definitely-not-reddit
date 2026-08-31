@@ -1,5 +1,7 @@
 FROM node:14
 
+RUN sed -i -e 's/deb.debian.org/archive.debian.org/g' -e 's/security.debian.org/archive.debian.org\/debian-security/g' -e '/buster-updates/d' /etc/apt/sources.list
+
 RUN apt-get update \
 	&& apt-get -y install xvfb gconf-service libasound2 libatk1.0-0 libc6 libcairo2 libcups2 \
 	libdbus-1-3 libexpat1 libfontconfig1 libgbm1 libgcc1 libgconf-2-4 libgdk-pixbuf2.0-0 libglib2.0-0 \
