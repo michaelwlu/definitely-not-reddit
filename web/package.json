@@ -3,8 +3,8 @@
 	"version": "0.2.0",
 	"private": true,
 	"scripts": {
-		"dev": "next dev",
-		"build": "next build",
+		"dev": "NODE_OPTIONS=--openssl-legacy-provider next dev",
+		"build": "NODE_OPTIONS=--openssl-legacy-provider next build",
 		"start": "next start",
 		"gen": "graphql-codegen --config codegen.yml",
 		"gen-env": "gen-env-types .env.local -o env.d.ts -e ."
