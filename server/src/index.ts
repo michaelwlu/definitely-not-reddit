@@ -26,7 +26,9 @@ const main = async () => {
   await createConnection({
     type: 'postgres',
     url: process.env.DATABASE_URL,
-    logging: true,
+    // every query was logged in production, which on the current host means a
+    // line per post per page load going to an unrotated container log
+    logging: __prod__ ? ['error', 'warn', 'migration'] : true,
     // synchronize: true,
     migrations: [path.join(__dirname, './migrations/*')],
     entities: [Post, User, Upvote, Comment, Link],
