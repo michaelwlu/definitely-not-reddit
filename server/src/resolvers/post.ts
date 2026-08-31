@@ -258,8 +258,15 @@ export class PostResolver {
       }
     } else {
       if (post.link) {
-        await Post.update({ id }, { link: undefined });
-        await Link.delete({ linkId: post.link.linkId });
+        const { linkId } = post.link;
+        // update() skips undefined keys, so clear the join column directly;
+        // otherwise the post still references the link and the delete below
+        // trips the foreign key
+        await getConnection().query(
+          `UPDATE post SET "postLinkId" = NULL WHERE id = $1`,
+          [id]
+        );
+        await Link.delete({ linkId });
       }
     }
 

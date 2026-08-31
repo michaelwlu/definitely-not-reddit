@@ -132,7 +132,7 @@ export class UserResolver {
       FORGET_PASSWORD_PREFIX + token,
       user.id,
       'ex',
-      1000 * 60 * 60 * 24 // 1 day
+      60 * 60 * 24 // 1 day, in seconds
     );
 
     await sendEmail(
@@ -173,7 +173,7 @@ export class UserResolver {
         password: hashedPassword,
       }).save();
     } catch (err) {
-      if (err.detail.includes('already exists')) {
+      if (err.detail?.includes('already exists')) {
         return {
           errors: [
             {
@@ -183,6 +183,17 @@ export class UserResolver {
           ],
         };
       }
+
+      // any other failure: report it rather than falling through with no user
+      console.error(`Register error: ${err}`);
+      return {
+        errors: [
+          {
+            field: 'username',
+            message: 'Something went wrong, please try again',
+          },
+        ],
+      };
     }
 
     // store user id session
