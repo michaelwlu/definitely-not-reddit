@@ -1,0 +1,35 @@
+# dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# yarn berry (this repo uses yarn 1; these appear if a v2+ client runs install)
+.yarn/
+.yarnrc.yml
+
+# build output
+dist/
+.next/
+out/
+build/
+coverage/
+
+# env
+.env
+.env.local
+.env.production
+.env.development.local
+.env.test.local
+.env.production.local
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# vercel
+.vercel
+
+# misc
+.DS_Store
+*.pem
