@@ -10,6 +10,20 @@ export interface LinkPreview {
   image: string;
 }
 
+// A provider can resolve with every field blank. That is a miss, not a hit, and
+// should fall through to the next provider instead of short-circuiting the chain.
+const hasContent = (preview: LinkPreview) =>
+  Boolean(preview.name || preview.description || preview.image);
+
+// linkPreviewGen is last because it launches a headless Chromium, which costs
+// hundreds of MB. It still earns its place at the end: it is the only provider
+// that gets metadata out of pages that block bots or disallow crawling.
+const providers = [
+  { name: 'linkPreviewNet', run: linkPreviewNet },
+  { name: 'urlMeta', run: urlMeta },
+  { name: 'linkPreviewGen', run: linkPreviewGen },
+];
+
 const getPreview = async (url: string): Promise<LinkPreview | null> => {
   const isUrlValid = await checkUrl(url);
   if (!isUrlValid) {
@@ -17,34 +31,18 @@ const getPreview = async (url: string): Promise<LinkPreview | null> => {
     return null;
   }
 
-  const errorLog = {
-    linkPreviewGen: '',
-    urlMeta: '',
-    linkPreviewNet: '',
-  };
+  const errorLog: Record<string, string> = {};
 
-  try {
-    const linkPreviewGenRes = await linkPreviewGen(url);
-    // console.log('linkPreviewGenString: ' + JSON.stringify(linkPreviewGenRes));
-    return linkPreviewGenRes;
-  } catch (error) {
-    errorLog.linkPreviewGen = error;
-  }
-
-  try {
-    const linkPreviewNetRes = await linkPreviewNet(url);
-    // console.log('linkPreviewNetString: ' + JSON.stringify(linkPreviewNetRes));
-    return linkPreviewNetRes;
-  } catch (error) {
-    errorLog.linkPreviewNet = error;
-  }
-
-  try {
-    const urlMetaRes = await urlMeta(url);
-    // console.log('urlMetaString: ' + JSON.stringify(urlMetaRes));
-    return urlMetaRes;
-  } catch (error) {
-    errorLog.urlMeta = error;
+  for (const provider of providers) {
+    try {
+      const preview = await provider.run(url);
+      if (hasContent(preview)) {
+        return preview;
+      }
+      errorLog[provider.name] = 'no metadata found';
+    } catch (error) {
+      errorLog[provider.name] = `${error}`;
+    }
   }
 
   console.log(errorLog);

@@ -3,15 +3,17 @@ import { LinkPreview } from './getPreview';
 
 const linkPreviewNet = async (url: string): Promise<LinkPreview> => {
   const config = {
-    data: {
+    // these have to be query params: axios drops `data` on a GET, so the
+    // request went out with no key at all and always came back 403
+    params: {
       key: process.env.LINK_PREVIEW_KEY,
-      q: encodeURIComponent(url),
+      q: url,
     },
     timeout: 5000,
   };
 
   const linkPreviewNetRes = await axios.get(
-    'http://api.linkpreview.net/',
+    'https://api.linkpreview.net/',
     config
   );
 
