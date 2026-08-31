@@ -1,3 +1,3 @@
 #!/bin/bash
 
-ssh root@206.189.196.146
+ssh -i ~/.ssh/definitely-not-reddit-oracle.key ubuntu@163.192.9.74

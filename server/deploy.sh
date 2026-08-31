@@ -1,8 +1,15 @@
 #!/bin/bash
 
-echo What should the version be?
-read VERSION
+set -e
 
-docker build -t michaelwlu/definitely-not-reddit:$VERSION . \
-&& docker push michaelwlu/definitely-not-reddit:$VERSION \
-&& ssh root@206.189.196.146 "docker pull michaelwlu/definitely-not-reddit:$VERSION && docker tag michaelwlu/definitely-not-reddit:$VERSION dokku/api:$VERSION && dokku tags:deploy api $VERSION"
+# Pushes the server/ subtree to Dokku, which builds the image on the host.
+# Config (secrets, DATABASE_URL, REDIS_URL) lives in `dokku config` on the
+# server, not in the image — nothing here reads a local .env file.
+
+REMOTE_URL="dokku@163.192.9.74:api"
+
+cd "$(dirname "$0")/.."
+
+git remote add dokku "$REMOTE_URL" 2>/dev/null || git remote set-url dokku "$REMOTE_URL"
+
+git subtree push --prefix=server dokku master
