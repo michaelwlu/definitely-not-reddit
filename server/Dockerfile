@@ -24,7 +24,7 @@ RUN yarn
 
 # Bundle app source
 COPY . .
-COPY .env.production .env
+RUN touch .env
 
 RUN yarn build
 
